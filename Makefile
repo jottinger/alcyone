@@ -1,4 +1,4 @@
-OBJS = alcyone.o
+OBJS = alcyone.o mcp23008.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
