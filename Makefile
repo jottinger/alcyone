@@ -15,7 +15,7 @@ $(OBJDIR)/%.o: %.cpp
 all: $(BINS)
 
 clean:
-	rm -r $(BINDIR) $(OBJDIR) *.orig
+	rm -r $(BINDIR) $(OBJDIR) *.orig *~
 	
 $(BINS): | $(BINDIR)
 
