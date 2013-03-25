@@ -36,7 +36,7 @@ public:
     }
     void modeAll(MODE mode);
     int read();
-    void writeBit(int bit, int state);
+    void writePin(int bit, int state);
     inline int readCached() {
         return lastRead;
     }

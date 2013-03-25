@@ -1,7 +1,7 @@
 OBJDIR = build
 BINDIR = bin
 OBJFILES=alcyone.o testmcp.o mcp23008.o
-TARGETS=alcyone testmcp rawmcp cylon
+TARGETS=alcyone testmcp rawmcp cylon testflare
 
 OBJS = $(addprefix $(OBJDIR)/,$(OBJFILES))
 BINS = $(addprefix $(BINDIR)/,$(TARGETS))
@@ -29,6 +29,9 @@ $(BINDIR)/cylon: $(OBJDIR)/cylon.o
 	$(CXX) $(LFLAGS) -o $@ $^
 	
 $(BINDIR)/testmcp: $(OBJDIR)/testmcp.o $(OBJDIR)/mcp23008.o
+	$(CXX) $(LFLAGS) -o $@ $^
+
+$(BINDIR)/testflare: $(OBJDIR)/testflare.o $(OBJDIR)/mcp23008.o
 	$(CXX) $(LFLAGS) -o $@ $^
 	
 $(OBJS): | $(OBJDIR)

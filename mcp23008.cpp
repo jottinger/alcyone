@@ -1,6 +1,3 @@
-#include "mcp23008.h"
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
 
 #include <iostream>
 #include <iomanip>
@@ -8,6 +5,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#include "mcp23008.h"
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
 
 static int initialized=0;
 
@@ -40,12 +41,12 @@ void MCP23008::writeRegister(MCP_REGISTER _register, int bit, int state) {
         // we want to turn it on
         val=val | (1<<bit);
     } else {
-        val= val & !(1<<bit);
+        val= val & (255-(1<<bit));
     }
     wiringPiI2CWriteReg8(fd, _register, val);
 }
 
-void MCP23008::writeBit(int bit, int state) {
+void MCP23008::writePin(int bit, int state) {
     writeRegister(MCP_GPIO, bit, state);
 }
 

@@ -15,15 +15,15 @@ int state=0;
 
 void invertState(MCP23008 mcp) {
     for(int i=10; i>0; i--) {
-        mcp.writeBit(0, 1);
+        mcp.writePin(0, 1);
         delay(i);
-        mcp.writeBit(0,0);
+        mcp.writePin(0,0);
     }
     delay(10);
     for(int i=0; i<10;i++) {
-        mcp.writeBit(0, 1);
+        mcp.writePin(0, 1);
         delay(i);
-        mcp.writeBit(0,0);
+        mcp.writePin(0,0);
     }
     }
 
