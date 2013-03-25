@@ -9,16 +9,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-using namespace std;
-
 static int initialized=0;
 
 void MCP23008::initialize() {
     if(!initialized) {
         if((fd=wiringPiI2CSetup(address))<0) {
-            cout << "Error initializing I2C at address 0x" << hex << address << endl
-                 << dec
-                 << strerror(errno) << endl;
+            std::cout << "Error initializing I2C at address 0x" 
+                 << std::hex << address << std::endl
+                 << std::dec
+                 << strerror(errno) << std::endl;
         }
     }
 }
@@ -32,7 +31,7 @@ int MCP23008::read() {
     return (lastRead=wiringPiI2CReadReg8(fd, MCP_GPIO));
 }
 
-void MCP23008::writeBit(int bit, int state) {
+void MCP23008::writeRegister(MCP_REGISTER _register, int bit, int state) {
     if(bit>7) {
         return;
     }
@@ -43,5 +42,20 @@ void MCP23008::writeBit(int bit, int state) {
     } else {
         val= val & !(1<<bit);
     }
-    wiringPiI2CWriteReg8(fd, MCP_GPIO, val);
+    wiringPiI2CWriteReg8(fd, _register, val);
+}
+
+void MCP23008::writeBit(int bit, int state) {
+    writeRegister(MCP_GPIO, bit, state);
+}
+
+void MCP23008::pinMode(int pin, MODE mode) {
+    writeRegister(MCP_IODIR, pin, mode);
+}
+
+int MCP23008::readPin(int pin) {
+    if(pin>7) {
+        return 0;
+    }
+    return bit(read(), pin);
 }

@@ -6,7 +6,7 @@ enum MODE {
     MODE_OUTPUT=1
 };
 
-enum MCP_REGISTERS {
+enum MCP_REGISTER {
     MCP_IODIR=0x00,
     MCP_IPOL=0x01,
     MCP_GPINTEN=0x02,
@@ -27,6 +27,7 @@ private:
     int lastRead;
 protected:
     void initialize();
+    void writeRegister(MCP_REGISTER register, int bit, int state);
 public:
     MCP23008(int _address=0x00) {
         // offset by 0x20 for the i2c address
@@ -42,6 +43,8 @@ public:
     inline int bit(int value, int bit) {
         return (value&(1<<bit))>>bit;
     }
+    void pinMode(int pin, MODE mode);
+    int readPin(int pin);
 };
 
 #endif
