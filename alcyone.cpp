@@ -13,7 +13,7 @@ std::vector<MCP23008> mcps;
 Debouncer debouncer[13];
 SerialDevice midiOut;
 int previousState[13];
-int octave=2;
+int octave=3;
 int transposition=0;
 int channel=1;
 int velocity=127;
@@ -168,13 +168,13 @@ void flare() {
 }
 
 void noteOn(int note) {
-    midiOut.send(0x90);
+    midiOut.send(0x90+channel-1);
     midiOut.send(note+octave*12+transposition);
     midiOut.send(127);
 
 }
 void noteOff(int note) {
-    midiOut.send(0x80);
+    midiOut.send(0x80+channel-1);
     midiOut.send(note+octave*12+transposition);
     midiOut.send(127);
 }
