@@ -20,6 +20,10 @@ enum MCP_REGISTER {
     MCP_OLAT=0x0a
 };
 
+inline int decode(int value, int bit) {
+  return (value&(1<<bit))>>bit;
+} 
+
 class MCP23008 {
 private:
     int address;
@@ -41,7 +45,7 @@ public:
         return lastRead;
     }
     inline int bit(int value, int bit) {
-        return (value&(1<<bit))>>bit;
+        return decode(value, bit);
     }
     void pinMode(int pin, MODE mode);
     int readPin(int pin);

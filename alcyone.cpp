@@ -4,11 +4,12 @@
 #include <algorithm>
 
 #include "mcp23008.h"
-
+#include "debounce.h"
 #include "wiringPi.h"
 
 std::vector<MCP23008> mcps;
-
+Debouncer debouncer[13];
+int previousState[13];
 int octave;
 
 void setup();
@@ -35,9 +36,27 @@ void setup() {
     util.pinMode(3, MODE_INPUT);
     mcps.push_back(util);
     flare();
+    for(int i=0;i<13;i++) {
+        previousState[i]=0;
+    }
 }
 
 void loop() {
+    int data[2];
+    data[0]=mcps[0].read();
+    data[1]=mcps[1].read();
+    for(int pin=0;pin<13;pin++) {
+        int datum=data[pin/8];
+        int state=debouncer[pin].debounce(decode(datum, pin%8));
+        if(state!=previousState[pin]) {        
+            if(previousState[pin]) {// new state: OFF
+                // noteOff(pin);
+            } else {
+                // noteOn(pin);
+            }
+            previousState[pin]=state;
+        }
+    }    
 }
 
 int state=1;
