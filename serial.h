@@ -11,6 +11,8 @@ private:
 protected:
 public:
   SerialDevice(std::string _device="/dev/ttyAMA0", int _baudRate=38400);
+  void send(unsigned char value);
+  unsigned char read();
 };
 
 #endif

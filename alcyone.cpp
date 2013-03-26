@@ -7,9 +7,11 @@
 #include "mcp23008.h"
 #include "debounce.h"
 #include "wiringPi.h"
+#include "serial.h"
 
 std::vector<MCP23008> mcps;
 Debouncer debouncer[13];
+SerialDevice midiOut;
 int previousState[13];
 int octave=2;
 int transposition=0;
@@ -142,9 +144,9 @@ void loop() {
         int state=debouncer[pin].debounce(decode(datum, pin%8));
         if(state!=previousState[pin]) {
             if(previousState[pin]) { // new state: OFF
-                // noteOff(pin);
+                 noteOff(pin);
             } else {
-                // noteOn(pin);
+                 noteOn(pin);
             }
             previousState[pin]=state;
         }
@@ -166,7 +168,14 @@ void flare() {
 }
 
 void noteOn(int note) {
+    midiOut.send(0x90);
+    midiOut.send(note+octave*12+transposition);
+    midiOut.send(127);
+
 }
 void noteOff(int note) {
+    midiOut.send(0x80);
+    midiOut.send(note+octave*12+transposition);
+    midiOut.send(127);
 }
 
