@@ -5,13 +5,13 @@
 
 class Debouncer {
 private:
-  int buffer[BUFFERSIZE];
-  int index;
+    int buffer[BUFFERSIZE];
+    int index;
 protected:
 public:
-  Debouncer();
-   
-  int debounce(int input);
+    Debouncer();
+
+    int debounce(int input);
 };
 
 #endif
