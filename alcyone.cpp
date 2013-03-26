@@ -149,9 +149,9 @@ void loop() {
         int state=debouncer[pin].debounce(decode(datum, pin%8));
         if(state!=previousState[pin]) {
             if(previousState[pin]) { // new state: OFF
-                noteOff(13-pin); // when wired, pin 0 is the HIGH C
+                noteOff(12-pin); // when wired, pin 0 is the HIGH C
             } else {
-                noteOn(13-pin);
+                noteOn(12-pin);
             }
             previousState[pin]=state;
         }
