@@ -25,6 +25,7 @@ void flare();
 void loop();
 void noteOn(int note);
 void noteOff(int note);
+void midiReset();
 
 void drawConstellation(WINDOW*win, int maxx, int maxy);
 void showStatus(WINDOW* win, int octave, int transposition);
@@ -106,6 +107,10 @@ void loop() {
     int key=getch();
     if(key!=ERR) {
         switch(key) {
+        case 'r':
+        case 'R':
+            midiReset();
+            break;
         case 'q':
         case 'Q':
             exitAlcyone=1;
@@ -144,9 +149,9 @@ void loop() {
         int state=debouncer[pin].debounce(decode(datum, pin%8));
         if(state!=previousState[pin]) {
             if(previousState[pin]) { // new state: OFF
-                 noteOff(pin);
+                noteOff(pin);
             } else {
-                 noteOn(pin);
+                noteOn(pin);
             }
             previousState[pin]=state;
         }
@@ -179,3 +184,8 @@ void noteOff(int note) {
     midiOut.send(127);
 }
 
+void midiReset() {
+    midiOut.send(0xb0+channel-1); // system reset for channel
+    midiOut.send(121); // not sure why 121 is recommended here.
+    midiOut.send(0x00);
+}
