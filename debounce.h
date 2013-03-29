@@ -20,7 +20,7 @@
 #ifndef __DEBOUNCE_H__
 #define __DEBOUNCE_H__ 1
 
-#define BUFFERSIZE 13
+#define BUFFERSIZE 21
 
 class Debouncer {
 private:
