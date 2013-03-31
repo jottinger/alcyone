@@ -19,7 +19,8 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="wiringPi" />
-					<Add library="ncurses" />
+					<Add library="boost_thread" />
+					<Add library="pthread" />
 				</Linker>
 			</Target>
 		</Build>
@@ -28,12 +29,16 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="alcyone.cpp" />
+		<Unit filename="alcyoneServer.cpp" />
+		<Unit filename="alcyoneServer.h" />
 		<Unit filename="debounce.cpp" />
 		<Unit filename="debounce.h" />
 		<Unit filename="mcp23008.cpp" />
 		<Unit filename="mcp23008.h" />
-		<Unit filename="serial.cpp" />
-		<Unit filename="serial.h" />
+		<Unit filename="midi.cpp" />
+		<Unit filename="midi.h" />
+		<Unit filename="serialdevice.cpp" />
+		<Unit filename="serialdevice.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -24,13 +24,13 @@
 #include <iomanip>
 #include <stdlib.h>
 
-#include "serial.h"
+#include "serialdevice.h"
 #include <wiringSerial.h>
 
 SerialDevice::SerialDevice(std::string _device, int _baudRate):fd(0),baudRate(_baudRate),device(_device) {
     fd=serialOpen(const_cast<char *>(device.c_str()), baudRate);
     if(fd<0) {
-        std::cout << "Error: serialOpen() failed." << std::endl
+        std::cerr << "Error: serialOpen() failed." << std::endl
                   << strerror(errno) << std::endl;
         exit(-1);
     }

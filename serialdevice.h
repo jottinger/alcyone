@@ -17,8 +17,8 @@
     along with Alcyone.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __SERIAL_H__
-#define __SERIAL_H__ 1
+#ifndef __SERIALDEVICE_H__
+#define __SERIALDEVICE_H__ 1
 
 #include <string>
 
