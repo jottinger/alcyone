@@ -118,10 +118,35 @@ public class ApplicationWindow {
 		});
 		panelControl.add(btnOctaveUp);
 
-		JButton btnTranspositionUp = new JButton("Transpose Up");
-		panelControl.add(btnTranspositionUp);
+        JButton btnTranspositionUp = new JButton("Transpose Up");
+        btnTranspositionUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connection.changeTransposition(AlcyoneVector.UP);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                updateStatus(panelControl);
+            }
+        });
+
+        panelControl.add(btnTranspositionUp);
 
 		JButton btnChannelUp = new JButton("Channel Up");
+        btnChannelUp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connection.changeChannel(AlcyoneVector.UP);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                updateStatus(panelControl);
+            }
+        });
 		panelControl.add(btnChannelUp);
 
 		txtOctave = new JTextField();
@@ -152,9 +177,33 @@ public class ApplicationWindow {
 		panelControl.add(btnOctaveDown);
 
 		JButton btnTransposeDown = new JButton("Transpose Down");
+        btnTransposeDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connection.changeTransposition(AlcyoneVector.DOWN);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                updateStatus(panelControl);
+            }
+        });
 		panelControl.add(btnTransposeDown);
 
 		JButton btnChannelDown = new JButton("Channel Down");
+        btnChannelDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    connection.changeChannel(AlcyoneVector.DOWN);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                updateStatus(panelControl);
+            }
+        });
 		panelControl.add(btnChannelDown);
 		updateStatus(panelControl);
 	}

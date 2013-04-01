@@ -44,8 +44,6 @@ public class AlcyoneConnection {
 
 	public void changeOctave(AlcyoneVector vector) throws IOException {
 		verifyConnection();
-		System.out.println("Message: "
-				+ Integer.toBinaryString(buildMessage(AlcyoneMessage.MSG_MIDI_CHANNEL_CHANGE, vector)[0]));
 		outputStream.write(buildMessage(AlcyoneMessage.MSG_MIDI_OCTAVE_CHANGE,
 				vector));
 	}
