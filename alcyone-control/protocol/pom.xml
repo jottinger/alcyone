@@ -8,9 +8,7 @@
         <artifactId>alcyone-control</artifactId>
         <version>1.0</version>
     </parent>
-    <groupId>com.redhat.osas.alcyone</groupId>
     <artifactId>protocol</artifactId>
-    <version>1.0</version>
     <name>protocol</name>
     <url>http://maven.apache.org</url>
     <properties>
