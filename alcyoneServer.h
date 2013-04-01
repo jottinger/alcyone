@@ -6,12 +6,21 @@
 const int ALCYONE_SERVER_ERROR=-1;
 extern int ALCYONE_SERVER_PORT;
 
-extern const unsigned char MSG_MIDI_RESET;
-extern const unsigned char MSG_MIDI_CHANNEL_CHANGE;
-extern const unsigned char MSG_MIDI_OCTAVE_CHANGE;
-extern const unsigned char MSG_MIDI_TRANSPOSITION_CHANGE;
-extern const unsigned char MSG_REQUEST_STATUS;
-extern const unsigned char MSG_RESET;
+/*
+const unsigned char MSG_MIDI_RESET=0x10;
+const unsigned char MSG_MIDI_CHANNEL_CHANGE=0x20;
+const unsigned char MSG_MIDI_OCTAVE_CHANGE=0x40;
+const unsigned char MSG_MIDI_TRANSPOSITION_CHANGE=0x80;
+const unsigned char MSG_REQUEST_STATUS=0x30;
+const unsigned char MSG_RESET=0xf0;
+*/
+enum ALCYONE_MESSAGE {
+    MSG_MIDI_RESET=0x10,
+    MSG_MIDI_CHANNEL_CHANGE=0x20,
+    MSG_REQUEST_STATUS=0x30,
+    MSG_MIDI_OCTAVE_CHANGE=0x40,
+    MSG_MIDI_TRANSPOSITION_CHANGE=0x80,
+    MSG_RESET=0xf0};
 
 void runServer(MIDI midi);
 
