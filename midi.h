@@ -14,7 +14,7 @@ private:
 protected:
     inline int getVector(unsigned char v)
     {
-        return v?1:-1;
+        return (v&0x0f)?1:-1;
     }
     inline void change(int* var, int minVal, int maxVal, unsigned char x)
     {

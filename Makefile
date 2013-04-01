@@ -1,43 +1,27 @@
-OBJDIR = build
-BINDIR = bin
-OBJFILES=alcyone.o testmcp.o mcp23008.o debounce.o serial.o
-TARGETS=alcyone testmcp rawmcp cylon testflare
+DEBUG	= -O3
+CC	= gcc
+INCLUDE	= -I/usr/local/include
+CFLAGS	= $(DEBUG) -Wall $(INCLUDE) -Winline -pipe
 
-OBJS = $(addprefix $(OBJDIR)/,$(OBJFILES))
-BINS = $(addprefix $(BINDIR)/,$(TARGETS))
+LDFLAGS	= -L/usr/local/lib
+LDLIBS    = -lwiringPi -lboost_thread -lpthread 
 
-CFLAGS = -Wall -c
-LFLAGS = -Wall -lwiringPi
+SRC	=	mcp23008.cpp alcyone.cpp alcyoneServer.cpp debounce.cpp midi.cpp \
+		serialdevice.cpp
 
-$(OBJDIR)/%.o: %.cpp
-	$(CXX) $(CFLAGS) -o $@ $<
+OBJ	=	$(SRC:.cpp=.o)
+
+BINS	=	$(SRC:.c=)
+
+all:	alcyone
+
+alcyone: $(OBJ)
+	$(CC) $(CFLAGS) -o alcyone $(OBJ) $(LDLIBS)
 	
-all: $(BINS)
-
+.cpp.o:
+	echo [CC] $<
+	$(CC) -c $(CFLAGS) $< -o $@
+	
 clean:
-	rm -r $(BINDIR) $(OBJDIR) *.orig *~
+	rm -f $(OBJ) alcyone
 	
-$(BINS): | $(BINDIR)
-
-$(BINDIR)/alcyone: $(OBJDIR)/alcyone.o $(OBJDIR)/mcp23008.o $(OBJDIR)/debounce.o $(OBJDIR)/serial.o
-	$(CXX) $(LFLAGS) -o $@ $^
-
-$(BINDIR)/rawmcp: $(OBJDIR)/rawmcp.o
-	$(CXX) $(LFLAGS) -o $@ $^
-
-$(BINDIR)/cylon: $(OBJDIR)/cylon.o
-	$(CXX) $(LFLAGS) -o $@ $^
-	
-$(BINDIR)/testmcp: $(OBJDIR)/testmcp.o $(OBJDIR)/mcp23008.o
-	$(CXX) $(LFLAGS) -o $@ $^
-
-$(BINDIR)/testflare: $(OBJDIR)/testflare.o $(OBJDIR)/mcp23008.o
-	$(CXX) $(LFLAGS) -o $@ $^
-	
-$(OBJS): | $(OBJDIR)
-
-$(OBJDIR):
-	mkdir $(OBJDIR)
-	
-$(BINDIR):
-	mkdir $(BINDIR)
