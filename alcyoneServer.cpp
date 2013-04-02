@@ -68,6 +68,8 @@ void runServer(MIDI midi)
         unsigned char statusBuffer[3];
         while(readBuffer(newSd, &buffer)!=ALCYONE_SERVER_ERROR)
         {
+            std::cout << "Received message:" << std::setbase(16)
+                << (int)buffer << std::setbase(10) << std::endl;
             switch(buffer & 0xf0)
             {
             case MSG_RESET:
