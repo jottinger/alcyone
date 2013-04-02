@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello android!</string>
-    <string name="app_name">android</string>
+    <string name="app_name">Alcyone Beta</string>
     <string name="AppTitle">Alcyone Beta</string>
     <string name="octaveUp">Up</string>
     <string name="octaveDown">Down</string>
@@ -12,4 +11,11 @@
     <string name="channelTitle">MIDI Channel</string>
     <string name="channelUp">Up</string>
     <string name="channelDown">Down</string>
+    <string name="mnuHostTitle">Set Host</string>
+    <string name="mnuPortTitle">Set Port</string>
+    <string name="mnuMIDIResetTitle">MIDI Reset</string>
+    <string name="mnuAlcyoneReset">System Reset</string>
+    <string name="mnuConfigureTitle">Configure</string>
+    <string name="defaultHost">piui</string>
+    <string name="lblHost">Alcyone Beta Hardware IP</string>
 </resources>

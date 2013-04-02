@@ -19,7 +19,7 @@
             android:id="@+id/octaveLayout"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" android:layout_marginTop="42dp"
-            android:layout_toLeftOf="@+id/AppTitle">
+            android:layout_toLeftOf="@+id/app_name">
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/octaveUp"
                 android:id="@+id/btnOctaveUp"
-                android:layout_centerHorizontal="true" android:layout_below="@+id/octaveLabel"/>
+                android:layout_centerHorizontal="true" android:layout_below="@+id/octaveLabel"
+                android:onClick="octaveUp"/>
         <TextView
                 android:layout_width="66dp"
                 android:layout_height="26dp"
@@ -46,7 +47,7 @@
                 android:text="@string/octaveDown"
                 android:id="@+id/btnOctaveDown"
                 android:layout_alignLeft="@+id/btnOctaveUp" android:layout_below="@+id/txtOctave"
-                android:layout_alignRight="@+id/btnOctaveUp"/>
+                android:layout_alignRight="@+id/btnOctaveUp" android:onClick="octaveDown"/>
     </RelativeLayout>
     <RelativeLayout
             android:layout_width="152dp"
@@ -65,7 +66,7 @@
                 android:text="@string/transpositionUp"
                 android:id="@+id/btnTranspositionUp" android:layout_alignLeft="@+id/transpositionLabel"
                 android:layout_alignParentTop="true" android:layout_marginTop="20dp"
-                android:layout_alignRight="@+id/transpositionLabel"/>
+                android:layout_alignRight="@+id/transpositionLabel" android:onClick="transpositionUp"/>
         <TextView
                 android:layout_width="66dp"
                 android:layout_height="26dp"
@@ -81,7 +82,7 @@
                 android:text="@string/transpositionDown"
                 android:id="@+id/btnTranspositionDown"
                 android:layout_alignLeft="@+id/transpositionLabel" android:layout_below="@+id/txtTransposition"
-                android:layout_alignRight="@+id/transpositionLabel"/>
+                android:layout_alignRight="@+id/transpositionLabel" android:onClick="transpositionDown"/>
     </RelativeLayout>
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -99,7 +100,7 @@
                 android:text="@string/channelUp"
                 android:id="@+id/btnChannelUp" android:layout_alignLeft="@+id/channelLabel"
                 android:layout_alignParentTop="true" android:layout_marginTop="20dp"
-                android:layout_alignRight="@+id/channelLabel"/>
+                android:layout_alignRight="@+id/channelLabel" android:onClick="channelUp"/>
         <TextView
                 android:layout_width="66dp"
                 android:layout_height="26dp"
@@ -115,6 +116,6 @@
                 android:text="@string/channelDown"
                 android:id="@+id/btnChannelDown"
                 android:layout_alignLeft="@+id/channelLabel" android:layout_below="@+id/txtChannel"
-                android:layout_alignRight="@+id/channelLabel"/>
+                android:layout_alignRight="@+id/channelLabel" android:onClick="channelDown"/>
     </RelativeLayout>
 </RelativeLayout>
