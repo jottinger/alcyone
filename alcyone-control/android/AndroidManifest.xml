@@ -6,7 +6,7 @@
               android:targetSdkVersion="16"/>
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".HelloAndroidActivity">
+        <activity android:name=".AlcyoneActivity" android:label="Alcyone">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

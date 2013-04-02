@@ -1,12 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/taurus">
     <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="251dp"
             android:layout_height="wrap_content"
-            android:text="@string/hello"
-            />
-</LinearLayout>
+            android:text="@string/AppTitle"
+            android:id="@+id/AppTitle"
+            android:gravity="center_horizontal" android:textColor="#feff02"
+            android:typeface="serif" android:visibility="visible"
+            android:singleLine="true" android:password="false"
+            android:shadowColor="#ff0821" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"
+            android:autoText="false" style="@android:style/TextAppearance.DeviceDefault.Large"/>
+    <RelativeLayout
+            android:layout_width="152dp"
+            android:layout_height="162dp"
+            android:id="@+id/octaveLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" android:layout_marginTop="42dp"
+            android:layout_toLeftOf="@+id/app_name">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/octaveTitle"
+                android:id="@+id/octaveLabel" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+        <Button
+                android:layout_width="92dp"
+                android:layout_height="wrap_content"
+                android:text="@string/octaveUp"
+                android:id="@+id/btnOctaveUp"
+                android:layout_centerHorizontal="true" android:layout_below="@+id/octaveLabel"
+                android:onClick="octaveUp"/>
+        <TextView
+                android:layout_width="66dp"
+                android:layout_height="26dp"
+                android:text="3"
+                android:id="@+id/txtOctave"
+                android:numeric="integer"
+                android:gravity="center_horizontal" android:textStyle="bold" android:textSize="20dp"
+                android:layout_alignLeft="@+id/octaveLabel" android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/octaveLabel"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/octaveDown"
+                android:id="@+id/btnOctaveDown"
+                android:layout_alignLeft="@+id/btnOctaveUp" android:layout_below="@+id/txtOctave"
+                android:layout_alignRight="@+id/btnOctaveUp" android:onClick="octaveDown"/>
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_width="152dp"
+            android:layout_height="162dp"
+            android:id="@+id/TranspositionLayout"
+            android:layout_centerHorizontal="true" android:layout_alignTop="@+id/octaveLayout"
+            android:layout_alignBottom="@+id/octaveLayout">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transpositionTitle"
+                android:id="@+id/transpositionLabel" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transpositionUp"
+                android:id="@+id/btnTranspositionUp" android:layout_alignLeft="@+id/transpositionLabel"
+                android:layout_alignParentTop="true" android:layout_marginTop="20dp"
+                android:layout_alignRight="@+id/transpositionLabel" android:onClick="transpositionUp"/>
+        <TextView
+                android:layout_width="66dp"
+                android:layout_height="26dp"
+                android:text="0"
+                android:id="@+id/txtTransposition"
+                android:numeric="integer"
+                android:gravity="center_horizontal" android:textStyle="bold" android:textSize="20dp"
+                android:layout_alignLeft="@+id/transpositionLabel" android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/transpositionLabel"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transpositionDown"
+                android:id="@+id/btnTranspositionDown"
+                android:layout_alignLeft="@+id/transpositionLabel" android:layout_below="@+id/txtTransposition"
+                android:layout_alignRight="@+id/transpositionLabel" android:onClick="transpositionDown"/>
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_toRightOf="@+id/AppTitle"
+            android:layout_alignTop="@+id/octaveLayout" android:layout_alignBottom="@+id/octaveLayout"
+            android:id="@+id/ChannelLayout">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/channelTitle"
+                android:id="@+id/channelLabel" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/channelUp"
+                android:id="@+id/btnChannelUp" android:layout_alignLeft="@+id/channelLabel"
+                android:layout_alignParentTop="true" android:layout_marginTop="20dp"
+                android:layout_alignRight="@+id/channelLabel" android:onClick="channelUp"/>
+        <TextView
+                android:layout_width="66dp"
+                android:layout_height="26dp"
+                android:text="1"
+                android:id="@+id/txtChannel"
+                android:numeric="integer"
+                android:gravity="center_horizontal" android:textStyle="bold" android:textSize="20dp"
+                android:layout_alignLeft="@+id/channelLabel" android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/channelLabel"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/channelDown"
+                android:id="@+id/btnChannelDown"
+                android:layout_alignLeft="@+id/channelLabel" android:layout_below="@+id/txtChannel"
+                android:layout_alignRight="@+id/channelLabel" android:onClick="channelDown"/>
+    </RelativeLayout>
+</RelativeLayout>
