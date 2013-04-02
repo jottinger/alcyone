@@ -1,12 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
+<GridLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/taurus" android:clickable="true" >
     <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hello"
-            />
-</LinearLayout>
+            android:text="@string/AppTitle"
+            android:id="@+id/title" android:layout_row="0" android:layout_column="0"
+            android:layout_columnSpan="3" android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" android:typeface="normal"
+            android:visibility="visible" android:textSize="30dp"/>
+    <!-- octave -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/octaveTitle"
+            android:id="@+id/octaveTitle" android:layout_row="1" android:layout_column="0" android:width="130dp"
+            android:layout_gravity="center_horizontal" android:gravity="center_horizontal" android:textStyle="bold"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/octaveUp"
+            android:id="@+id/octaveUp" android:layout_row="2" android:layout_column="0"
+            android:width="100dp" android:layout_gravity="center_horizontal" android:enabled="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/octave" android:layout_row="3" android:layout_column="0"
+            android:layout_gravity="center_horizontal" android:text="3" android:textSize="30dp"
+            android:textStyle="bold" android:textColor="#fbff04"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/octaveDown"
+            android:id="@+id/octaveDown" android:layout_row="4" android:layout_column="0"
+            android:width="100dp" android:enabled="true"
+            android:layout_gravity="center_horizontal"/>
+
+    <!-- transposition -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/transpositionTitle"
+            android:id="@+id/transpositionTitle" android:layout_row="1" android:layout_column="1" android:width="130dp"
+            android:layout_gravity="center_horizontal" android:gravity="center_horizontal" android:textStyle="bold"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/transpositionUp"
+            android:id="@+id/transpositionUp" android:layout_row="2" android:layout_column="1"
+            android:width="100dp" android:layout_gravity="center_horizontal"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/transposition" android:layout_row="3" android:layout_column="1"
+            android:layout_gravity="center_horizontal" android:text="0"
+            android:textSize="30dp"
+            android:textStyle="bold" android:textColor="#fbff04"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/transpositionDown"
+            android:id="@+id/transpositionDown" android:layout_row="4" android:layout_column="1"
+            android:width="100dp" android:layout_gravity="center_horizontal"/>
+
+    <!-- channel -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/channelTitle"
+            android:id="@+id/channelTitle" android:layout_row="1" android:layout_column="2" android:width="130dp"
+            android:gravity="center_horizontal" android:layout_gravity="center_horizontal" android:textStyle="bold"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/channelUp"
+            android:id="@+id/channelUp" android:layout_row="2" android:layout_column="2"
+            android:width="100dp" android:layout_gravity="center_horizontal"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/channel" android:layout_row="3" android:layout_column="2"
+            android:layout_gravity="center_horizontal" android:width="100dp" android:text="1"
+            android:textSize="30dp"
+            android:textStyle="bold" android:singleLine="true" android:gravity="center_horizontal"
+            android:textColor="#fbff04"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/channelDown"
+            android:id="@+id/channelDown" android:layout_row="4" android:layout_column="2"
+            android:width="100dp" android:layout_gravity="center_horizontal"/>
+
+</GridLayout>
