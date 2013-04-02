@@ -15,6 +15,7 @@
 
     <properties>
         <platform.version>4.1.1.4</platform.version>
+        <android.sdk.path>/home/jottinge/tools/android-sdk-linux</android.sdk.path>
     </properties>
 
     <dependencies>
