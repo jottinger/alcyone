@@ -71,7 +71,8 @@ void runServer(MIDI midi)
     while(1)
     {
         if(verbose) {
-            std::cout << "Alcyone: waiting for data on port TCP" << ALCYONE_SERVER_PORT << std::endl;
+            std::cout << "Alcyone: waiting for data on TCP/IP port: " 
+                << ALCYONE_SERVER_PORT << std::endl;
         }
         cliLen = sizeof(cliAddr);
         newSd = accept(sd, (struct sockaddr *) &cliAddr, &cliLen);
