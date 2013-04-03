@@ -22,6 +22,7 @@
 #include <vector>
 #include <algorithm>
 #include <boost/thread.hpp>
+#include <boost/program_options.hpp>
 
 #include "mcp23008.h"
 #include "alcyoneServer.h"
@@ -29,24 +30,49 @@
 #include "wiringPi.h"
 #include "midi.h"
 
+namespace options = boost::program_options;
+
 std::vector<MCP23008> mcps;
+options::options_description desc("Allowed options");
+options::variables_map vm;
 MIDI midi;
 Debouncer debouncer[13];
 int previousState[13];
 int exitAlcyone=0;
-
+bool verbose;
+extern int ALCYONE_SERVER_PORT;
 void setup();
 void shutdown();
 void flare();
 void loop();
 
 int main(int argc, char **argv) {
+
+    desc.add_options()
+    ( "help", "produce help message")
+    ( "verbose", options::value<bool>(&verbose)->default_value(true),
+      "verbose mode" )
+    ( "port", options::value<int>(&ALCYONE_SERVER_PORT)->default_value(8090),
+      "server port" )
+    ;
+    options::store(options::parse_command_line(argc, argv, desc), vm);
+    options::notify(vm);
+
+    if(vm.count("help")) {
+        std::cout << desc << std::endl;
+        return 1;
+    }
+
     setup();
 
     boost::thread t(loop);
     boost::thread s(runServer,midi);
+    boost::thread u(flare);
+
     t.join();
     s.join();
+    u.join();
+
     shutdown();
     return 0;
 }
@@ -69,7 +95,6 @@ void setup() {
     util.pinMode(2, MODE_OUTPUT);
     util.pinMode(3, MODE_INPUT);
     mcps.push_back(util);
-    flare();
     for(int i=0; i<13; i++) {
         previousState[i]=0;
     }

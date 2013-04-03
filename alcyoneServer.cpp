@@ -25,6 +25,7 @@
     You should have received a copy of the GNU General Public License
     along with Alcyone.  If not, see <http://www.gnu.org/licenses/>.
 */
+extern bool verbose;
 
 int ALCYONE_SERVER_PORT=8090;
 
@@ -69,9 +70,10 @@ void runServer(MIDI midi)
 
     while(1)
     {
-
-        std::cout << "Alcyone: waiting for data on port TCP" << ALCYONE_SERVER_PORT << std::endl;
-
+        if(verbose) {
+            std::cout << "Alcyone: waiting for data on TCP/IP port: " 
+                << ALCYONE_SERVER_PORT << std::endl;
+        }
         cliLen = sizeof(cliAddr);
         newSd = accept(sd, (struct sockaddr *) &cliAddr, &cliLen);
         if(newSd<0)
@@ -86,29 +88,49 @@ void runServer(MIDI midi)
         unsigned char statusBuffer[3];
         while(readBuffer(newSd, &buffer)!=ALCYONE_SERVER_ERROR)
         {
-            std::cout << "Received message:" << std::setbase(16)
-                << (int)buffer << std::setbase(10) << std::endl;
+            if(verbose==true) {
+                std::cout << "Received message: " << std::setbase(16)
+                          << (int)buffer << std::setbase(10);
+            }
             switch(buffer & 0xf0)
             {
             case MSG_RESET:
+                if(verbose==true) {
+                    std::cout << "(MSG_RESET)";
+                }
                 midi.resetToDefaults();
                 break;
             case MSG_MIDI_RESET:
+                if(verbose==true) {
+                    std::cout << "(MSG_MIDI_RESET)";
+                }
                 midi.reset();
                 break;
             case MSG_REQUEST_STATUS:
+                if(verbose==true) {
+                    std::cout << "(MSG_REQUEST_STATUS)";
+                }
                 statusBuffer[0]=midi.getOctave();
                 statusBuffer[1]=midi.getTransposition();
                 statusBuffer[2]=midi.getChannel();
                 send(newSd, &statusBuffer, 3, 0);
                 break;
             case MSG_MIDI_OCTAVE_CHANGE:
+                if(verbose==true) {
+                    std::cout << "(MSG_MIDI_OCTAVE_CHANGE)";
+                }
                 midi.changeOctave(buffer);
                 break;
             case MSG_MIDI_CHANNEL_CHANGE:
+                if(verbose==true) {
+                    std::cout << "(MSG_MIDI_CHANNEL_CHANGE)";
+                }
                 midi.changeChannel(buffer);
                 break;
             case MSG_MIDI_TRANSPOSITION_CHANGE:
+                if(verbose==true) {
+                    std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE)";
+                }
                 midi.changeTransposition(buffer);
                 break;
             default:
@@ -118,7 +140,9 @@ void runServer(MIDI midi)
                           << std::endl;
                 break;
             }
-
+            if(verbose==true) {
+                std::cout << std::endl;
+            }
         } /* while(read_line) */
 
     } /* while (1) */
