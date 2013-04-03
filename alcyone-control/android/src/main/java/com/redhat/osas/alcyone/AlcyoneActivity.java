@@ -17,7 +17,7 @@ import java.io.IOException;
  * Time: 8:24 AM
  */
 public class AlcyoneActivity extends Activity {
-    AlcyoneConnection connection;
+    AsyncAlcyoneConnection connection;
     String host = "192.168.1.108";
     int port = 8090;
     TextView txtOctave;
@@ -27,24 +27,25 @@ public class AlcyoneActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        txtOctave=(TextView)findViewById(R.id.txtOctave);
-        txtTransposition= (TextView) findViewById(R.id.txtTransposition);
-        txtChannel= (TextView) findViewById(R.id.txtChannel);
+        txtOctave = (TextView) findViewById(R.id.txtOctave);
+        txtTransposition = (TextView) findViewById(R.id.txtTransposition);
+        txtChannel = (TextView) findViewById(R.id.txtChannel);
 
         Log.d("alcyone", "We have initialized");
-        connection = new AlcyoneConnection(host, port);
+        connection = new AsyncAlcyoneConnection(host, port);
         updateStatus();
     }
 
     private void updateStatus() {
+        AlcyoneStatus status = null;
         try {
-            AlcyoneStatus status=connection.getStatus();
-            txtOctave.setText(Integer.toString(status.getOctave()));
-            txtTransposition.setText(Integer.toString(status.getTransposition()));
-            txtChannel.setText(Integer.toString(status.getChannel()));
+            status = connection.getStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
+        txtOctave.setText(Integer.toString(status.getOctave()));
+        txtTransposition.setText(Integer.toString(status.getTransposition()));
+        txtChannel.setText(Integer.toString(status.getChannel()));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class AlcyoneActivity extends Activity {
                     connection.midiReset();
                     updateStatus();
                 } catch (IOException e) {
-                    Log.e("alcyone",e.getMessage(),  e);
+                    Log.e("alcyone", e.getMessage(), e);
                 }
                 return true;
             case R.id.mnuAlcyoneReset:
@@ -70,7 +71,7 @@ public class AlcyoneActivity extends Activity {
                     connection.reset();
                     updateStatus();
                 } catch (IOException e) {
-                    Log.e("alcyone",e.getMessage(),  e);
+                    Log.e("alcyone", e.getMessage(), e);
                 }
                 return false;
             case R.id.mnuConfigure:
@@ -87,7 +88,7 @@ public class AlcyoneActivity extends Activity {
             connection.changeOctave(AlcyoneVector.UP);
             updateStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
     }
 
@@ -96,7 +97,7 @@ public class AlcyoneActivity extends Activity {
             connection.changeOctave(AlcyoneVector.DOWN);
             updateStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
     }
 
@@ -105,7 +106,7 @@ public class AlcyoneActivity extends Activity {
             connection.changeTransposition(AlcyoneVector.UP);
             updateStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
     }
 
@@ -114,7 +115,7 @@ public class AlcyoneActivity extends Activity {
             connection.changeTransposition(AlcyoneVector.DOWN);
             updateStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
     }
 
@@ -123,7 +124,7 @@ public class AlcyoneActivity extends Activity {
             connection.changeChannel(AlcyoneVector.UP);
             updateStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
     }
 
@@ -132,7 +133,7 @@ public class AlcyoneActivity extends Activity {
             connection.changeChannel(AlcyoneVector.DOWN);
             updateStatus();
         } catch (IOException e) {
-            Log.e("alcyone",e.getMessage(),  e);
+            Log.e("alcyone", e.getMessage(), e);
         }
     }
 }

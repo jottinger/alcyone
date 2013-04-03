@@ -1,5 +1,7 @@
 package com.redhat.osas.alcyone;
 
+import com.redhat.osas.alcyone.impl.AlcyoneConnectionImpl;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,14 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
-import java.awt.CardLayout;
 import javax.swing.JSeparator;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import javax.swing.JButton;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
@@ -34,7 +31,7 @@ public class ApplicationWindow {
 
 	String alcyoneHost = "piui";
 	String alcyonePort = "8090";
-	AlcyoneConnection connection = new AlcyoneConnection("192.168.1.108", 8090);
+	AlcyoneConnection connection = new AlcyoneConnectionImpl("192.168.1.108", 8090);
 
 	/**
 	 * Launch the application.
