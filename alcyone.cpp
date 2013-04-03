@@ -45,8 +45,10 @@ int main(int argc, char **argv) {
 
     boost::thread t(loop);
     boost::thread s(runServer,midi);
+    boost::thread u(flare);
     t.join();
     s.join();
+    u.join();
     shutdown();
     return 0;
 }
@@ -69,7 +71,6 @@ void setup() {
     util.pinMode(2, MODE_OUTPUT);
     util.pinMode(3, MODE_INPUT);
     mcps.push_back(util);
-    flare();
     for(int i=0; i<13; i++) {
         previousState[i]=0;
     }

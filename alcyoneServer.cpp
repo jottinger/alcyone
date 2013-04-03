@@ -86,29 +86,35 @@ void runServer(MIDI midi)
         unsigned char statusBuffer[3];
         while(readBuffer(newSd, &buffer)!=ALCYONE_SERVER_ERROR)
         {
-            std::cout << "Received message:" << std::setbase(16)
-                << (int)buffer << std::setbase(10) << std::endl;
+            std::cout << "Received message: " << std::setbase(16)
+                << (int)buffer << std::setbase(10);
             switch(buffer & 0xf0)
             {
             case MSG_RESET:
+                std::cout << "(MSG_RESET)";
                 midi.resetToDefaults();
                 break;
             case MSG_MIDI_RESET:
+                std::cout << "(MSG_MIDI_RESET)";
                 midi.reset();
                 break;
             case MSG_REQUEST_STATUS:
+                std::cout << "(MSG_REQUEST_STATUS)";
                 statusBuffer[0]=midi.getOctave();
                 statusBuffer[1]=midi.getTransposition();
                 statusBuffer[2]=midi.getChannel();
                 send(newSd, &statusBuffer, 3, 0);
                 break;
             case MSG_MIDI_OCTAVE_CHANGE:
+                std::cout << "(MSG_MIDI_OCTAVE_CHANGE)";
                 midi.changeOctave(buffer);
                 break;
             case MSG_MIDI_CHANNEL_CHANGE:
+                std::cout << "(MSG_MIDI_CHANNEL_CHANGE)";
                 midi.changeChannel(buffer);
                 break;
             case MSG_MIDI_TRANSPOSITION_CHANGE:
+                std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE)";
                 midi.changeTransposition(buffer);
                 break;
             default:
@@ -118,7 +124,7 @@ void runServer(MIDI midi)
                           << std::endl;
                 break;
             }
-
+            std::cout << std::endl;
         } /* while(read_line) */
 
     } /* while (1) */
