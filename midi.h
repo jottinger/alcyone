@@ -75,4 +75,4 @@ public:
     }
 };
 
-#endif // __ALCYONE_H_INCLUDED__
+#endif // __MIDI_H_INCLUDED__

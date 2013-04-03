@@ -39,6 +39,7 @@ SerialDevice::SerialDevice(std::string _device, int _baudRate):fd(0),baudRate(_b
 void SerialDevice::send(unsigned char value) {
     serialPutchar(fd, value);
 }
+
 unsigned char SerialDevice::read() {
     if(serialDataAvail(fd)>0) {
         return serialGetchar(fd);
