@@ -1,3 +1,22 @@
+/*
+    Copyright 2012- by Joseph B. Ottinger.
+
+    This file is part of Alcyone.
+
+    Alcyone is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Alcyone is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Alcyone.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.redhat.osas.alcyone;
 
 import android.os.AsyncTask;
@@ -18,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 @SuppressWarnings("unchecked")
 public class AsyncAlcyoneConnection implements AlcyoneConnection {
     AlcyoneConnection delegate;
-    AlcyoneStatus lastStatus=null;
+    AlcyoneStatus lastStatus = null;
 
     public AlcyoneStatus getLastStatus() {
         return lastStatus;
@@ -64,7 +83,7 @@ public class AsyncAlcyoneConnection implements AlcyoneConnection {
 
     @Override
     public AlcyoneStatus getStatus() throws IOException {
-        AsyncChangeClass c=new AsyncChangeClass(delegate);
+        AsyncChangeClass c = new AsyncChangeClass(delegate);
         try {
             return c.execute(new Pair<String, AlcyoneVector>("status", null)).get();
         } catch (InterruptedException e) {
@@ -114,7 +133,7 @@ public class AsyncAlcyoneConnection implements AlcyoneConnection {
                             delegate.midiReset();
                             break;
                         case 6: // status, happens normally anyway
-                            status=lastStatus=delegate.getStatus();
+                            status = lastStatus = delegate.getStatus();
                             break;
                         default:
                             Log.e("alcyone", "AlcyoneChangeClass command map failed to handle: " + pairs[0].first);
