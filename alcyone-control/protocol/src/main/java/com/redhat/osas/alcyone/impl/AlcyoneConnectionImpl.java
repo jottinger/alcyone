@@ -44,9 +44,7 @@ public class AlcyoneConnectionImpl implements AlcyoneConnection {
 
     @Override
     public void connect() throws IOException {
-        safeClose(outputStream);
-        safeClose(inputStream);
-        safeClose(socket);
+        disconnect();
         socket = new Socket(this.host, this.port);
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
@@ -120,6 +118,16 @@ public class AlcyoneConnectionImpl implements AlcyoneConnection {
             ioe.printStackTrace();
         }
         return new AlcyoneStatus(buffer[0], buffer[1], buffer[2]);
+    }
+
+    @Override
+    public void disconnect() {
+        safeClose(outputStream);
+        safeClose(inputStream);
+        safeClose(socket);
+        outputStream = null;
+        inputStream = null;
+        socket = null;
     }
 
     private byte[] buildMessage(AlcyoneMessage msg) {

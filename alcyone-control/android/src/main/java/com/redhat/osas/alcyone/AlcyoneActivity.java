@@ -19,6 +19,7 @@
 package com.redhat.osas.alcyone;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class AlcyoneActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.main);
         txtOctave = (TextView) findViewById(R.id.txtOctave);
         txtTransposition = (TextView) findViewById(R.id.txtTransposition);
@@ -52,6 +54,16 @@ public class AlcyoneActivity extends Activity {
         Log.d("alcyone", "We have initialized");
         connection = new AsyncAlcyoneConnection(host, port);
         updateStatus();
+    }
+
+    @Override
+    protected void onPause() {
+        connection.disconnect();
+    }
+
+    @Override
+    protected void onResume() {
+        connection = new AsyncAlcyoneConnection(host, port);
     }
 
     private void updateStatus() {

@@ -94,6 +94,11 @@ public class AsyncAlcyoneConnection implements AlcyoneConnection {
         return new AlcyoneStatus(-1, -1, -1);
     }
 
+    @Override
+    public void disconnect() {
+        delegate.disconnect();
+    }
+
     private class AsyncChangeClass extends AsyncTask<Pair<String, AlcyoneVector>, Integer, AlcyoneStatus> {
         AlcyoneConnection delegate;
         Map<String, Integer> commandMap = new HashMap<String, Integer>() {
