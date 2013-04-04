@@ -52,18 +52,21 @@ public class AlcyoneActivity extends Activity {
         txtChannel = (TextView) findViewById(R.id.txtChannel);
 
         Log.d("alcyone", "We have initialized");
-        connection = new AsyncAlcyoneConnection(host, port);
-        updateStatus();
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
+        Log.d("alcyone", "onPause");
         connection.disconnect();
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
+        Log.d("alcyone", "onResume");
         connection = new AsyncAlcyoneConnection(host, port);
+        updateStatus();
     }
 
     private void updateStatus() {

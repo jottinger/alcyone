@@ -50,15 +50,6 @@ public class AlcyoneConnectionImpl implements AlcyoneConnection {
         outputStream = socket.getOutputStream();
     }
 
-    private void safeClose(AutoCloseable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
     private void verifyConnection() throws IOException {
         if (socket == null || socket.isClosed() || !socket.isConnected()
                 || socket.isInputShutdown() || socket.isOutputShutdown()) {
@@ -128,6 +119,36 @@ public class AlcyoneConnectionImpl implements AlcyoneConnection {
         outputStream = null;
         inputStream = null;
         socket = null;
+    }
+
+    private void safeClose(OutputStream outputStream) {
+        if (outputStream != null) {
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void safeClose(InputStream inputStream) {
+        if (inputStream != null) {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void safeClose(Socket socket) {
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private byte[] buildMessage(AlcyoneMessage msg) {
