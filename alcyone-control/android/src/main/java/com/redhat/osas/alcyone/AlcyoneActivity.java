@@ -34,7 +34,7 @@ import android.widget.TextView;
  * Time: 8:24 AM
  */
 public class AlcyoneActivity extends Activity {
-    String host = "192.168.1.115lone ";
+    String host = "192.168.1.115";
     int port = 8090;
     TextView txtOctave;
     TextView txtTransposition;
