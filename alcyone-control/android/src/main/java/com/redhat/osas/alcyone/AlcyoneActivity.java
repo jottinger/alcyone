@@ -28,16 +28,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.IOException;
-
 /**
  * User: jottinge
  * Date: 4/2/13
  * Time: 8:24 AM
  */
 public class AlcyoneActivity extends Activity {
-    AsyncAlcyoneConnection connection;
-    String host = "192.168.1.108";
+    String host = "192.168.1.115lone ";
     int port = 8090;
     TextView txtOctave;
     TextView txtTransposition;
@@ -58,27 +55,17 @@ public class AlcyoneActivity extends Activity {
     protected void onPause() {
         super.onPause();
         Log.d("alcyone", "onPause");
-        connection.disconnect();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d("alcyone", "onResume");
-        connection = new AsyncAlcyoneConnection(host, port);
         updateStatus();
     }
 
     private void updateStatus() {
-        AlcyoneStatus status = null;
-        try {
-            status = connection.getStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
-        txtOctave.setText(Integer.toString(status.getOctave()));
-        txtTransposition.setText(Integer.toString(status.getTransposition()));
-        txtChannel.setText(Integer.toString(status.getChannel()));
+        new AlcyoneClient(this, host, port).updateStatus();
     }
 
     @Override
@@ -92,20 +79,10 @@ public class AlcyoneActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mnuMIDIReset:
-                try {
-                    connection.midiReset();
-                    updateStatus();
-                } catch (IOException e) {
-                    Log.e("alcyone", e.getMessage(), e);
-                }
+                new AlcyoneClient(this, host, port).midiReset();
                 return true;
             case R.id.mnuAlcyoneReset:
-                try {
-                    connection.reset();
-                    updateStatus();
-                } catch (IOException e) {
-                    Log.e("alcyone", e.getMessage(), e);
-                }
+                new AlcyoneClient(this, host, port).reset();
                 return false;
             case R.id.mnuConfigure:
                 /*
@@ -117,56 +94,26 @@ public class AlcyoneActivity extends Activity {
     }
 
     public void octaveUp(View view) {
-        try {
-            connection.changeOctave(AlcyoneVector.UP);
-            updateStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
+        new AlcyoneClient(this, host, port).changeOctave(AlcyoneVector.UP);
     }
 
     public void octaveDown(View view) {
-        try {
-            connection.changeOctave(AlcyoneVector.DOWN);
-            updateStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
+        new AlcyoneClient(this, host, port).changeOctave(AlcyoneVector.DOWN);
     }
 
     public void transpositionUp(View view) {
-        try {
-            connection.changeTransposition(AlcyoneVector.UP);
-            updateStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
+        new AlcyoneClient(this, host, port).changeTransposition(AlcyoneVector.UP);
     }
 
     public void transpositionDown(View view) {
-        try {
-            connection.changeTransposition(AlcyoneVector.DOWN);
-            updateStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
+        new AlcyoneClient(this, host, port).changeTransposition(AlcyoneVector.DOWN);
     }
 
     public void channelUp(View view) {
-        try {
-            connection.changeChannel(AlcyoneVector.UP);
-            updateStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
+        new AlcyoneClient(this, host, port).changeChannel(AlcyoneVector.UP);
     }
 
     public void channelDown(View view) {
-        try {
-            connection.changeChannel(AlcyoneVector.DOWN);
-            updateStatus();
-        } catch (IOException e) {
-            Log.e("alcyone", e.getMessage(), e);
-        }
+        new AlcyoneClient(this, host, port).changeChannel(AlcyoneVector.DOWN);
     }
 }
