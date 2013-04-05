@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import com.redhat.osas.alcyone.client.AlcyoneClientFactory;
 
 /**
  * User: jottinge
@@ -34,7 +35,7 @@ import android.widget.TextView;
  * Time: 8:24 AM
  */
 public class AlcyoneActivity extends Activity {
-    String host = "192.168.1.115";
+    String host = "192.168.1.108";
     int port = 8090;
     TextView txtOctave;
     TextView txtTransposition;
@@ -51,6 +52,12 @@ public class AlcyoneActivity extends Activity {
         Log.d("alcyone", "We have initialized");
     }
 
+    public void updateStatus(AlcyoneStatus alcyoneStatus) {
+        txtChannel.setText(Integer.toString(alcyoneStatus.getChannel()));
+        txtOctave.setText(Integer.toString(alcyoneStatus.getOctave()));
+        txtTransposition.setText(Integer.toString(alcyoneStatus.getTransposition()));
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -65,7 +72,7 @@ public class AlcyoneActivity extends Activity {
     }
 
     private void updateStatus() {
-        new AlcyoneClient(this, host, port).updateStatus();
+        AlcyoneClientFactory.build(this, host, port).updateStatus();
     }
 
     @Override
@@ -79,10 +86,10 @@ public class AlcyoneActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mnuMIDIReset:
-                new AlcyoneClient(this, host, port).midiReset();
+                AlcyoneClientFactory.build(this, host, port).midiReset();
                 return true;
             case R.id.mnuAlcyoneReset:
-                new AlcyoneClient(this, host, port).reset();
+                AlcyoneClientFactory.build(this, host, port).reset();
                 return false;
             case R.id.mnuConfigure:
                 /*
@@ -94,26 +101,26 @@ public class AlcyoneActivity extends Activity {
     }
 
     public void octaveUp(View view) {
-        new AlcyoneClient(this, host, port).changeOctave(AlcyoneVector.UP);
+        AlcyoneClientFactory.build(this, host, port).changeOctave(AlcyoneVector.UP);
     }
 
     public void octaveDown(View view) {
-        new AlcyoneClient(this, host, port).changeOctave(AlcyoneVector.DOWN);
+        AlcyoneClientFactory.build(this, host, port).changeOctave(AlcyoneVector.DOWN);
     }
 
     public void transpositionUp(View view) {
-        new AlcyoneClient(this, host, port).changeTransposition(AlcyoneVector.UP);
+        AlcyoneClientFactory.build(this, host, port).changeTransposition(AlcyoneVector.UP);
     }
 
     public void transpositionDown(View view) {
-        new AlcyoneClient(this, host, port).changeTransposition(AlcyoneVector.DOWN);
+        AlcyoneClientFactory.build(this, host, port).changeTransposition(AlcyoneVector.DOWN);
     }
 
     public void channelUp(View view) {
-        new AlcyoneClient(this, host, port).changeChannel(AlcyoneVector.UP);
+        AlcyoneClientFactory.build(this, host, port).changeChannel(AlcyoneVector.UP);
     }
 
     public void channelDown(View view) {
-        new AlcyoneClient(this, host, port).changeChannel(AlcyoneVector.DOWN);
+        AlcyoneClientFactory.build(this, host, port).changeChannel(AlcyoneVector.DOWN);
     }
 }
