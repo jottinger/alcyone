@@ -31,12 +31,18 @@ import java.io.IOException;
 
 public class ApplicationWindow {
 
+    private final AlcyoneConnection connection = new AlcyoneConnectionImpl("192.168.1.108", 8090);
     private JFrame frmAlcyoneController;
     private JTextField txtOctave;
     private JTextField txtTransposition;
     private JTextField txtChannel;
 
-    private final AlcyoneConnection connection = new AlcyoneConnectionImpl("192.168.1.108", 8090);
+    /**
+     * Create the application.
+     */
+    private ApplicationWindow() {
+        initialize();
+    }
 
     /**
      * Launch the application.
@@ -52,13 +58,6 @@ public class ApplicationWindow {
                 }
             }
         });
-    }
-
-    /**
-     * Create the application.
-     */
-    private ApplicationWindow() {
-        initialize();
     }
 
     /**
@@ -211,16 +210,12 @@ public class ApplicationWindow {
     }
 
     private void updateStatus(JPanel panelControl) {
-        try {
-            AlcyoneStatus s = connection.getStatus();
-            txtOctave.setText(Integer.toString(s.getOctave()));
-            txtChannel.setText(Integer.toString(s.getChannel()));
-            txtTransposition.setText(Integer.toString(s.getTransposition()));
-            panelControl.invalidate();
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+        AlcyoneStatus s = connection.getStatus();
+        txtOctave.setText(Integer.toString(s.getOctave()));
+        txtChannel.setText(Integer.toString(s.getChannel()));
+        txtTransposition.setText(Integer.toString(s.getTransposition()));
+        panelControl.invalidate();
+
     }
 
 }
