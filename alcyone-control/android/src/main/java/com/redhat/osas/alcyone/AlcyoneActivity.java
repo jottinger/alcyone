@@ -19,6 +19,8 @@
 package com.redhat.osas.alcyone;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,6 +63,11 @@ public class AlcyoneActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("host", host);
+        editor.putInt("port", port);
+        editor.commit();
         Log.d("alcyone", "onPause");
     }
 
@@ -68,6 +75,10 @@ public class AlcyoneActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.d("alcyone", "onResume");
+        SharedPreferences preferences = getSharedPreferences("alcyone", 0);
+        host = preferences.getString("host", "piui");
+        port = preferences.getInt("port", 8090);
+        Log.d("alcyone", "Setting host to '" + host + "', port to " + port);
         updateStatus();
     }
 
@@ -92,6 +103,8 @@ public class AlcyoneActivity extends Activity {
                 AlcyoneClientFactory.build(this, host, port).reset();
                 return false;
             case R.id.mnuConfigure:
+                startActivity(new Intent(this, EditPreferencesActivity.class));
+                return true;
                 /*
                    Note lack of preferences support here, thanks for 'splainin' so well, Android
                  */

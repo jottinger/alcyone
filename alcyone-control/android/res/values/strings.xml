@@ -18,4 +18,11 @@
     <string name="mnuConfigureTitle">Configure</string>
     <string name="defaultHost">piui</string>
     <string name="lblHost">Alcyone Beta Hardware IP</string>
+    <string name="lblPort">Port</string>
+    <string name="defaultPort">8090</string>
+    <string name="lblPrefHost">Host</string>
+    <string name="lblPrefPort">Port</string>
+    <string name="prefReset">Reset to Current Values</string>
+    <string name="prefResettoDefault">Reset to Default Values</string>
+    <string name="prefSubmit">Submit</string>
 </resources>

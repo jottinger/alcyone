@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:id="@+id/prefHost"
+    <EditTextPreference android:id="@+id/host"
                         android:title="@string/lblHost"
                         android:text="@string/defaultHost"/>
+    <EditTextPreference android:id="@+id/port"
+                        android:title="@string/lblPort"
+                        android:inputType="number"
+                        android:text="@string/defaultPort"/>
+
 </PreferenceScreen>
