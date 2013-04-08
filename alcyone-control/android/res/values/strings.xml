@@ -11,8 +11,6 @@
     <string name="channelTitle">MIDI Channel</string>
     <string name="channelUp">Up</string>
     <string name="channelDown">Down</string>
-    <string name="mnuHostTitle">Set Host</string>
-    <string name="mnuPortTitle">Set Port</string>
     <string name="mnuMIDIResetTitle">MIDI Reset</string>
     <string name="mnuAlcyoneReset">System Reset</string>
     <string name="mnuConfigureTitle">Configure</string>
@@ -23,6 +21,6 @@
     <string name="lblPrefHost">Host</string>
     <string name="lblPrefPort">Port</string>
     <string name="prefReset">Reset to Current Values</string>
-    <string name="prefResettoDefault">Reset to Default Values</string>
+    <string name="prefResetToDefault">Reset to Default Values</string>
     <string name="prefSubmit">Submit</string>
 </resources>

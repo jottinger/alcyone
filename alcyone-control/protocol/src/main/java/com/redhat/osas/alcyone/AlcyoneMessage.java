@@ -32,7 +32,7 @@ public enum AlcyoneMessage {
     MSG_MIDI_TRANSPOSITION_CHANGE(0x80),
     MSG_RESET(0xf0);
 
-    private int mask;
+    private final int mask;
 
     AlcyoneMessage(int value) {
         this.mask = value;

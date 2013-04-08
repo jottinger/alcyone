@@ -28,7 +28,7 @@ public enum AlcyoneVector {
     UP(1),
     DOWN(-1);
 
-    final int vector;
+    private final int vector;
 
     AlcyoneVector(int vector) {
         this.vector = vector;

@@ -39,7 +39,7 @@ public interface AlcyoneConnection {
 
     void reset() throws IOException;
 
-    AlcyoneStatus getStatus() throws IOException;
+    AlcyoneStatus getStatus();
 
     void disconnect();
 }

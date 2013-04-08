@@ -3,7 +3,6 @@ package com.redhat.osas.alcyone;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,17 +10,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class EditPreferencesActivity extends Activity {
-    String host;
-    int port;
-    TextView txtPrefHost;
-    TextView txtPrefPort;
-    Button reset;
-    Button resetToDefault;
-    Button submit;
+    private String host;
+    private int port;
+    private TextView txtPrefHost;
+    private TextView txtPrefPort;
+    private Button reset;
+    private Button resetToDefault;
+    private Button submit;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.preferences);
         txtPrefHost = (TextView) findViewById(R.id.txtPrefHost);
         txtPrefPort = (TextView) findViewById(R.id.txtPrefPort);

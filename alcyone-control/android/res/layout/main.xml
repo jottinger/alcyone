@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@drawable/taurus">
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
             android:layout_width="251dp"
             android:layout_height="wrap_content"
@@ -18,13 +17,16 @@
             android:layout_height="162dp"
             android:id="@+id/octaveLayout"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" android:layout_marginTop="42dp"
+            android:layout_alignParentTop="true" android:layout_marginTop="42dp">
+        <!--
             android:layout_toLeftOf="@+id/app_name">
+            -->
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/octaveTitle"
-                android:id="@+id/octaveLabel" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+                android:id="@+id/octaveLabel" android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="92dp"
                 android:layout_height="wrap_content"
@@ -35,7 +37,7 @@
         <TextView
                 android:layout_width="66dp"
                 android:layout_height="26dp"
-                android:text="3"
+                android:text=""
                 android:id="@+id/txtOctave"
                 android:numeric="integer"
                 android:gravity="center_horizontal" android:textStyle="bold" android:textSize="20dp"
@@ -59,7 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/transpositionTitle"
-                android:id="@+id/transpositionLabel" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+                android:id="@+id/transpositionLabel" android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +73,7 @@
         <TextView
                 android:layout_width="66dp"
                 android:layout_height="26dp"
-                android:text="0"
+                android:text=""
                 android:id="@+id/txtTransposition"
                 android:numeric="integer"
                 android:gravity="center_horizontal" android:textStyle="bold" android:textSize="20dp"
@@ -93,7 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/channelTitle"
-                android:id="@+id/channelLabel" android:layout_centerHorizontal="true" android:layout_alignParentTop="true"/>
+                android:id="@+id/channelLabel" android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +108,7 @@
         <TextView
                 android:layout_width="66dp"
                 android:layout_height="26dp"
-                android:text="1"
+                android:text=""
                 android:id="@+id/txtChannel"
                 android:numeric="integer"
                 android:gravity="center_horizontal" android:textStyle="bold" android:textSize="20dp"

@@ -36,9 +36,7 @@ public class ApplicationWindow {
     private JTextField txtTransposition;
     private JTextField txtChannel;
 
-    String alcyoneHost = "piui";
-    String alcyonePort = "8090";
-    AlcyoneConnection connection = new AlcyoneConnectionImpl("192.168.1.108", 8090);
+    private final AlcyoneConnection connection = new AlcyoneConnectionImpl("192.168.1.108", 8090);
 
     /**
      * Launch the application.
@@ -59,7 +57,7 @@ public class ApplicationWindow {
     /**
      * Create the application.
      */
-    public ApplicationWindow() {
+    private ApplicationWindow() {
         initialize();
     }
 
@@ -70,7 +68,7 @@ public class ApplicationWindow {
         frmAlcyoneController = new JFrame();
         frmAlcyoneController.setTitle("Alcyone Controller");
         frmAlcyoneController.setBounds(100, 100, 454, 177);
-        frmAlcyoneController.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frmAlcyoneController.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JMenuBar menuBar = new JMenuBar();
         frmAlcyoneController.setJMenuBar(menuBar);
 

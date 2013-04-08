@@ -37,11 +37,11 @@ import com.redhat.osas.alcyone.client.AlcyoneClientFactory;
  * Time: 8:24 AM
  */
 public class AlcyoneActivity extends Activity {
-    String host = "192.168.1.108";
-    int port = 8090;
-    TextView txtOctave;
-    TextView txtTransposition;
-    TextView txtChannel;
+    private String host = "192.168.1.108";
+    private int port = 8090;
+    private TextView txtOctave;
+    private TextView txtTransposition;
+    private TextView txtChannel;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,35 +105,32 @@ public class AlcyoneActivity extends Activity {
             case R.id.mnuConfigure:
                 startActivity(new Intent(this, EditPreferencesActivity.class));
                 return true;
-                /*
-                   Note lack of preferences support here, thanks for 'splainin' so well, Android
-                 */
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void octaveUp(View view) {
+    public void octaveUp(@SuppressWarnings("UnusedParameters") View view) {
         AlcyoneClientFactory.build(this, host, port).changeOctave(AlcyoneVector.UP);
     }
 
-    public void octaveDown(View view) {
+    public void octaveDown(@SuppressWarnings("UnusedParameters") View view) {
         AlcyoneClientFactory.build(this, host, port).changeOctave(AlcyoneVector.DOWN);
     }
 
-    public void transpositionUp(View view) {
+    public void transpositionUp(@SuppressWarnings("UnusedParameters") View view) {
         AlcyoneClientFactory.build(this, host, port).changeTransposition(AlcyoneVector.UP);
     }
 
-    public void transpositionDown(View view) {
+    public void transpositionDown(@SuppressWarnings("UnusedParameters") View view) {
         AlcyoneClientFactory.build(this, host, port).changeTransposition(AlcyoneVector.DOWN);
     }
 
-    public void channelUp(View view) {
+    public void channelUp(@SuppressWarnings("UnusedParameters") View view) {
         AlcyoneClientFactory.build(this, host, port).changeChannel(AlcyoneVector.UP);
     }
 
-    public void channelDown(View view) {
+    public void channelDown(@SuppressWarnings("UnusedParameters") View view) {
         AlcyoneClientFactory.build(this, host, port).changeChannel(AlcyoneVector.DOWN);
     }
 }

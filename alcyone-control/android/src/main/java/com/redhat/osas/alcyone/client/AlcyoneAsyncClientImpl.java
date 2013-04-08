@@ -21,7 +21,7 @@ import java.util.Scanner;
  * Time: 1:07 PM
  */
 class AlcyoneAsyncClientImpl extends AlcyoneClientBase implements AlcyoneClient {
-    static HttpClient httpClient = new DefaultHttpClient();
+    private static final HttpClient httpClient = new DefaultHttpClient();
 
     public AlcyoneAsyncClientImpl(AlcyoneActivity activity, String host, int port) {
         super(activity, host, port);

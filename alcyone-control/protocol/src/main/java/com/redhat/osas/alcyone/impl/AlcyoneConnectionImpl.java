@@ -30,11 +30,11 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class AlcyoneConnectionImpl implements AlcyoneConnection {
-    int port;
-    String host;
-    Socket socket = null;
-    InputStream inputStream = null;
-    OutputStream outputStream = null;
+    private final int port;
+    private final String host;
+    private Socket socket = null;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
 
 
     public AlcyoneConnectionImpl(String host, int port) {
@@ -95,7 +95,7 @@ public class AlcyoneConnectionImpl implements AlcyoneConnection {
     }
 
     @Override
-    public AlcyoneStatus getStatus() throws IOException {
+    public AlcyoneStatus getStatus() {
         // since this is an exchange, we need to manage the thread differently\
         final byte[] buffer = new byte[3];
         try {
