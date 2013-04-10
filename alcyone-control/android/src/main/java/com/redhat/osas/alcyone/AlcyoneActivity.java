@@ -101,7 +101,7 @@ public class AlcyoneActivity extends Activity {
                 return true;
             case R.id.mnuAlcyoneReset:
                 AlcyoneClientFactory.build(this, host, port).reset();
-                return false;
+                return true;
             case R.id.mnuConfigure:
                 startActivity(new Intent(this, EditPreferencesActivity.class));
                 return true;
