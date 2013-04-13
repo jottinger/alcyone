@@ -29,6 +29,7 @@
 #include "debounce.h"
 #include "wiringPi.h"
 #include "midi.h"
+#include "flare.h"
 
 namespace options = boost::program_options;
 
@@ -43,7 +44,6 @@ bool verbose;
 extern int ALCYONE_SERVER_PORT;
 void setup();
 void shutdown();
-void flare();
 void loop();
 
 int main(int argc, char **argv) {
@@ -119,15 +119,4 @@ void loop() {
 }
 
 
-void flare() {
-    MCP23008 mcp=mcps.at(2);
-    for(int count=0; count<4; count++) {
-        for(int state=1; state>-1; state--) {
-            for(int pin=0; pin<3; pin++) {
-                mcp.writePin(pin, state);
-                delay(75);
-            }
-        }
-    }
-}
 
