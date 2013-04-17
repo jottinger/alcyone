@@ -33,10 +33,10 @@ static int initialized=0;
 void MCP23008::initialize() {
     if(!initialized) {
         if((fd=wiringPiI2CSetup(address))<0) {
-            std::cout << "Error initializing I2C at address 0x" 
-                 << std::hex << address << std::endl
-                 << std::dec
-                 << strerror(errno) << std::endl;
+            std::cout << "Error initializing I2C at address 0x"
+                      << std::hex << address << std::endl
+                      << std::dec
+                      << strerror(errno) << std::endl;
         }
     }
 }

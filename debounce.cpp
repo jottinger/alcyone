@@ -19,7 +19,7 @@
 
 #include "debounce.h"
 
-Debouncer::Debouncer():index(0){
+Debouncer::Debouncer():index(0) {
     for(int j=0; j<BUFFERSIZE; j++) {
         buffer[j]=0;
     }

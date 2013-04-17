@@ -18,17 +18,45 @@
 */
 
 #include "midi.h"
+#include <iostream>
+
+extern int verbose;
+
+void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
+{
+    int v=getVector(x);
+
+    if(verbose) {
+        std::cout << std::endl << "old value " << *var << " min " << minVal << " max " << maxVal
+                  << " vector " << v;
+
+    }
+    *var+=v;
+    *var=std::max(minVal, std::min(*var, maxVal));
+    if(verbose) {
+        std::cout << " new value " << *var << std::endl;
+    }
+}
 
 void MIDI::noteOn(unsigned char note) {
     send(0x90+channel-1);
-    send(note+octave*12+transposition);
+    send(note+getOctave()*12+getTransposition());
     send(velocity & 127);
+    if(verbose) {
+        std::cout << "Note on: note " << note+getOctave()*12+getTransposition()
+                  << " octave " << getOctave()
+                  << ", velocity " << (velocity & 127) << std::endl;
+    }
 }
 
 void MIDI::noteOff(unsigned char note) {
     send(0x80+channel-1);
-    send(note+octave*12+transposition);
+    send(note+getOctave()*12+getTransposition());
     send(0);
+    if(verbose) {
+        std::cout << "Note off: note " << note+getOctave()*12+getTransposition()
+                  << ", velocity " << (velocity & 127) << std::endl;
+    }
 }
 
 void MIDI::reset() {

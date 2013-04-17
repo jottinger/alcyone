@@ -40,7 +40,7 @@ enum MCP_REGISTER {
 };
 
 inline int decode(int value, int bit) {
-  return (value&(1<<bit))>>bit;
+    return (value&(1<<bit))>>bit;
 }
 
 class MCP23008 {
@@ -52,7 +52,7 @@ protected:
     void initialize();
     void writeRegister(MCP_REGISTER register, int bit, int state);
 public:
-    MCP23008(int _address=0x00):address(_address|0x20),fd(0),lastRead(0){
+    MCP23008(int _address=0x00):address(_address|0x20),fd(0),lastRead(0) {
         // offset by 0x20 for the i2c address
         address=_address | 0x20;
         initialize();

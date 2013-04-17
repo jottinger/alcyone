@@ -35,19 +35,14 @@ protected:
     {
         return (v&0x0f)?1:-1;
     }
-    inline void change(int* var, int minVal, int maxVal, unsigned char x)
-    {
-        int v=getVector(x);
-        *var+=v;
-        *var=std::max(minVal, std::min(*var, maxVal));
-    }
+    void change(int* var, int minVal, int maxVal, unsigned char x);
 public:
     MIDI(std::string _device="/dev/ttyAMA0", int _baudRate=38400):
-    SerialDevice(_device, _baudRate),
-    octave(3),
-    transposition(0),
-    channel(1),
-    velocity(127) {}
+        SerialDevice(_device, _baudRate),
+        octave(3),
+        transposition(0),
+        channel(1),
+        velocity(127) {}
     void changeOctave(unsigned char direction)
     {
         change(&octave, 2, 8, direction);
@@ -62,9 +57,15 @@ public:
     }
     void noteOn(unsigned char note);
     void noteOff(unsigned char note);
-    inline unsigned getOctave() { return octave; }
-    inline int getTransposition() { return transposition; }
-    inline int getChannel() { return channel; }
+    inline int getOctave() {
+        return octave;
+    }
+    inline int getTransposition() {
+        return transposition;
+    }
+    inline int getChannel() {
+        return channel;
+    }
     void reset();
     void resetToDefaults() {
         channel=1;

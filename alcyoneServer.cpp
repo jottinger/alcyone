@@ -75,21 +75,21 @@ void handleRequest(WPP::Request* req, WPP::Response* res)
         case MSG_MIDI_OCTAVE_CHANGE:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_OCTAVE_CHANGE)";
+                std::cout << "(MSG_MIDI_OCTAVE_CHANGE)" << message;
             }
             state->changeOctave(message);
             break;
         case MSG_MIDI_CHANNEL_CHANGE:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_CHANNEL_CHANGE)";
+                std::cout << "(MSG_MIDI_CHANNEL_CHANGE)" << message;
             }
             state->changeChannel(message);
             break;
         case MSG_MIDI_TRANSPOSITION_CHANGE:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE)";
+                std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE) " << message;
             }
             state->changeTransposition(message);
             break;
@@ -115,9 +115,9 @@ void handleRequest(WPP::Request* req, WPP::Response* res)
     res->body << state->getChannel() << std::endl;
 }
 
-void runServer(MIDI midi)
+void runServer(MIDI *midi)
 {
-    state=&midi;
+    state=midi;
     WPP::Server server;
     server.get("/", &handleRequest);
     server.start(ALCYONE_SERVER_PORT);

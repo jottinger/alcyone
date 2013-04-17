@@ -66,12 +66,11 @@ int main(int argc, char **argv) {
     setup();
 
     boost::thread t(loop);
-    boost::thread s(runServer,midi);
-    boost::thread u(flare);
+    boost::thread s(runServer,&midi);
+    flare();
 
     t.join();
     s.join();
-    u.join();
 
     shutdown();
     return 0;
@@ -101,19 +100,27 @@ void setup() {
 }
 
 void loop() {
-    int data[2];
-    data[0]=mcps[0].read();
-    data[1]=mcps[1].read();
-    for(int pin=0; pin<13; pin++) {
-        int datum=data[pin/8];
-        int state=debouncer[pin].debounce(decode(datum, pin%8));
-        if(state!=previousState[pin]) {
-            if(previousState[pin]) { // new state: OFF
-                midi.noteOff(12-pin); // when wired, pin 0 is the HIGH C
-            } else {
-                midi.noteOn(12-pin);
+    while(true) {
+        int data[2];
+        data[0]=mcps[0].read();
+        data[1]=mcps[1].read();
+        for(int pin=0; pin<13; pin++) {
+            int datum=data[pin/8];
+            int state=debouncer[pin].debounce(decode(datum, pin%8));
+            if(verbose==2) {
+                std::cout << state;
             }
-            previousState[pin]=state;
+            if(state!=previousState[pin]) {
+                if(previousState[pin]) { // new state: OFF
+                    midi.noteOff(12-pin); // when wired, pin 0 is the HIGH C
+                } else {
+                    midi.noteOn(12-pin);
+                }
+                previousState[pin]=state;
+            }
+        }
+        if(verbose==2) {
+            std::cout << std::endl;
         }
     }
 }

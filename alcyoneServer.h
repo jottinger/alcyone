@@ -38,8 +38,9 @@ enum ALCYONE_MESSAGE {
     MSG_REQUEST_STATUS=0x30,
     MSG_MIDI_OCTAVE_CHANGE=0x40,
     MSG_MIDI_TRANSPOSITION_CHANGE=0x80,
-    MSG_RESET=0xf0};
+    MSG_RESET=0xf0
+};
 
-void runServer(MIDI midi);
+void runServer(MIDI *midi);
 
 #endif // ALCYONESERVER_INCLUDED
