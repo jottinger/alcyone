@@ -100,10 +100,15 @@ void setup() {
 }
 
 void loop() {
+    int counter=0;
     while(true) {
         int data[2];
         data[0]=mcps[0].read();
         data[1]=mcps[1].read();
+        counter++;
+        if(counter%32276==0) {
+            flareTime++;
+        }
         for(int pin=0; pin<13; pin++) {
             int datum=data[pin/8];
             int state=debouncer[pin].debounce(decode(datum, pin%8));
@@ -111,6 +116,7 @@ void loop() {
                 std::cout << state;
             }
             if(state!=previousState[pin]) {
+                flareTime--;
                 if(previousState[pin]) { // new state: OFF
                     midi.noteOff(12-pin); // when wired, pin 0 is the HIGH C
                 } else {
