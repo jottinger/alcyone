@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 
     boost::thread t(loop);
     boost::thread s(runServer,&midi);
-    flare();
+    boost::thread u(flare);
 
     t.join();
     s.join();
