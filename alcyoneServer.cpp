@@ -6,6 +6,7 @@
 #include "midi.h"
 #include "web++.hpp"
 #include "alcyoneServer.h"
+#include "log.h"
 
 extern bool verbose;
 
