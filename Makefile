@@ -7,7 +7,7 @@ LDFLAGS	= -L/usr/local/lib
 LDLIBS    = -lwiringPi -lboost_thread -lboost_program_options -lpthread 
 
 SRC	=	mcp23008.cpp alcyone.cpp alcyoneServer.cpp debounce.cpp midi.cpp \
-		serialdevice.cpp flare.cpp
+		serialdevice.cpp flare.cpp log.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 

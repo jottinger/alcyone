@@ -19,6 +19,7 @@
 
 #include "midi.h"
 #include <iostream>
+#include "log.h"
 
 extern int verbose;
 
@@ -27,14 +28,14 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
     int v=getVector(x);
 
     if(verbose) {
-        std::cout << std::endl << "old value " << *var << " min " << minVal << " max " << maxVal
+        std::clog << std::endl << "old value " << *var << " min " << minVal << " max " << maxVal
                   << " vector " << v;
 
     }
     *var+=v;
     *var=std::max(minVal, std::min(*var, maxVal));
     if(verbose) {
-        std::cout << " new value " << *var << std::endl;
+        std::clog << " new value " << *var << std::endl;
     }
 }
 
@@ -43,7 +44,7 @@ void MIDI::noteOn(unsigned char note) {
     send(note+getOctave()*12+getTransposition());
     send(velocity & 127);
     if(verbose) {
-        std::cout << "Note on: note " << note+getOctave()*12+getTransposition()
+        std::clog << "Note on: note " << note+getOctave()*12+getTransposition()
                   << " octave " << getOctave()
                   << ", velocity " << (velocity & 127) << std::endl;
     }
@@ -54,7 +55,7 @@ void MIDI::noteOff(unsigned char note) {
     send(note+getOctave()*12+getTransposition());
     send(0);
     if(verbose) {
-        std::cout << "Note off: note " << note+getOctave()*12+getTransposition()
+        std::clog << "Note off: note " << note+getOctave()*12+getTransposition()
                   << ", velocity " << (velocity & 127) << std::endl;
     }
 }

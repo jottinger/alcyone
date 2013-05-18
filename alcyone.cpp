@@ -30,6 +30,7 @@
 #include "wiringPi.h"
 #include "midi.h"
 #include "flare.h"
+#include "log.h"
 
 namespace options = boost::program_options;
 
@@ -47,7 +48,6 @@ void shutdown();
 void loop();
 
 int main(int argc, char **argv) {
-
     desc.add_options()
     ( "help", "produce help message")
     ( "verbose", options::value<bool>(&verbose)->default_value(true),
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 
     boost::thread t(loop);
     boost::thread s(runServer,&midi);
-    flare();
+    boost::thread u(flare);
 
     t.join();
     s.join();
@@ -80,8 +80,9 @@ void shutdown() {
 }
 
 void setup() {
-    // initialize the socket
-
+    // set up syslog
+    std::clog.rdbuf(new Log("alcyone", LOG_LOCAL0));
+    
     // set up the two input I2C chips
     for(int i=0; i<2; i++) {
         MCP23008 mcp(i);
@@ -100,10 +101,16 @@ void setup() {
 }
 
 void loop() {
+    int counter=0;
     while(true) {
         int data[2];
         data[0]=mcps[0].read();
         data[1]=mcps[1].read();
+        counter++;
+        if(counter%1276==0) {
+            flareTime++;
+            std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
+        }
         for(int pin=0; pin<13; pin++) {
             int datum=data[pin/8];
             int state=debouncer[pin].debounce(decode(datum, pin%8));
@@ -111,6 +118,8 @@ void loop() {
                 std::cout << state;
             }
             if(state!=previousState[pin]) {
+                flareTime-=2;
+                std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
                 if(previousState[pin]) { // new state: OFF
                     midi.noteOff(12-pin); // when wired, pin 0 is the HIGH C
                 } else {
