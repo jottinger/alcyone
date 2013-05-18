@@ -14,7 +14,7 @@
     <string name="mnuMIDIResetTitle">MIDI Reset</string>
     <string name="mnuAlcyoneReset">System Reset</string>
     <string name="mnuConfigureTitle">Configure</string>
-    <string name="defaultHost">piui</string>
+    <string name="defaultHost">192.168.2.2</string>
     <string name="lblHost">Alcyone Beta Hardware IP</string>
     <string name="lblPort">Port</string>
     <string name="defaultPort">8090</string>

@@ -19,10 +19,12 @@
 package com.redhat.osas.alcyone;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +44,8 @@ public class AlcyoneActivity extends Activity {
     private TextView txtOctave;
     private TextView txtTransposition;
     private TextView txtChannel;
+    private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +54,8 @@ public class AlcyoneActivity extends Activity {
         txtOctave = (TextView) findViewById(R.id.txtOctave);
         txtTransposition = (TextView) findViewById(R.id.txtTransposition);
         txtChannel = (TextView) findViewById(R.id.txtChannel);
-
+        powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         Log.d("alcyone", "We have initialized");
     }
 
@@ -68,6 +73,8 @@ public class AlcyoneActivity extends Activity {
         editor.putString("host", host);
         editor.putInt("port", port);
         editor.commit();
+        wakeLock.release();
+        ;
         Log.d("alcyone", "onPause");
     }
 
@@ -80,6 +87,7 @@ public class AlcyoneActivity extends Activity {
         port = preferences.getInt("port", 8090);
         Log.d("alcyone", "Setting host to '" + host + "', port to " + port);
         updateStatus();
+        wakeLock.acquire();
     }
 
     private void updateStatus() {

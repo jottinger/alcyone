@@ -6,6 +6,8 @@
               android:targetSdkVersion="16"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <application android:icon="@drawable/icon" android:label="@string/app_name"
                  android:theme="@style/Theme.AlcyoneBeta">
         <activity android:name=".AlcyoneActivity" android:label="Alcyone">
