@@ -232,7 +232,13 @@ but the numbers were generally consistent.
 Therefore, I easily wrote an Arduino sketch to read the analog pin, and 
 compare the reading to an internal array; this gave me the "current note."
 
-This may have been easy to write, but it was not good enough.
+NOTE: One thing to notice here is that the resistor ladder was monophonic. That is,
+it could detect only one note at a time. It's possible to create a polyphonic
+resistor ladder by using different resistor values; you can 
+basically subtract the resistance until you eliminate all values to determine
+multiple notes. I... didn't do that, and didn't really need to.
+
+Reading the single pedal may have been easy to write, but it was not good enough.
 
 The switches trended towards "bounce." Bounce is the tendency of a 
 signal to fluctuate while a mechanical connection is stabilizing. When you 
@@ -286,6 +292,8 @@ have trimmed down the detection to less than a millisecond (although I
 could be wrong, since I haven't invested in such resistors and 
 thus have no data).
 
+=== Production of MIDI event
+
 The milestone I was trying to meet was the detection of the proper pedal 
 in less than ten milliseconds. (Actually, it's to detect the note 
 *and* send MIDI data in less than ten milliseconds, but let's start small.)
@@ -337,8 +345,8 @@ However, my family protested the noise (the synthesizer's bleeps and bloops, and
 cries of "Eureka!")
 
 Another solution was to set up a MIDI signal tracker, or 
-http://www.midiox.com/[MIDI OX]. The Linux equivalent
-is http://home.gna.org/gmidimonitor/[gmidimonitor]. Now I could
+http://www.midiox.com/[MIDI OX]. Linux has some equivalents - kmidimon, 
+and gmidimonitor among them. Now I could
 watch the MIDI data digitally, and validate velocity values as well.
 
 NOTE: It's worth pointing out for the sake of honesty that I was
@@ -347,3 +355,128 @@ on Windows is like driving a spike through your head, slowly - but testing
 the MIDI data on Windows, mostly because sound configuration on Windows
 was easy and sound configuration on Linux was... less easy. By a lot. 
 It's funny; sound on Windows is like development on Linux, and vice versa. :)
+
+=== Production of MIDI event based on pedal state
+
+Since I was able to detect a pedal being pressed, and I was able to 
+send a MIDI note as well, the next thing to do was to send the note associated
+with a given pedal to a synthesizer. (And therefore unleash my inner Geddy Lee.)
+
+That was actually quite simple: the pedal-reading code gave me a 
+number that corresponded with the pedal being pressed, and all I needed to do
+was add in state detection that sent that note number, offset by the octave, 
+and sent the correct "NoteOn" event or "NoteOff" event based on the 
+previous state.
+
+I then hooked up a small LCD display so I could have scrolling text, with
+the project's name and version. I probably spent as much time scrolling 
+"FrankenPedals v1" on that
+LCD display as I did on sending the MIDI data. 
+
+At least it looked cool... as long as you were less than a foot away from the 
+LCD display. Realistically, it wasn't usable in a stage environment. _C'est la vie._ 
+I would have thought the LCD a good idea had I not tried it out.
+
+At this point I had a somewhat working monstrosity of wires, able to send
+valid MIDI data to a synthesizer over a single channel, with incredibly 
+noticable latency. So far, so good - at least I knew that what I 
+had wouldn't work.
+
+Time to switch platforms to try something else.
+
+=== The Raspberry Pi Implementation
+
+The http://raspberrypi.org[Raspberry Pi] is an embeddable computing platform
+aimed primarily at education. It was designed with *very* low costs in mind, and
+can be found for $35 USD (for a machine with an ARM processor at 700 MHz, ethernet, 
+USB, HDMI, composite video, an 1/8" audio jack, GPIO pins, and 512MB RAM). 
+
+The cost was roughly equivalent to the Arduino Uno - but the RAM and processing power
+were orders of magnitude better. One thing the Pi did *not* have that the
+Uno did, though, was _analog input_.
+
+Realistically, that was more or less okay. The analog input mechanism,
+the resistor ladder, was simply too coarse to use; I knew I had to find
+a different solution even if I stayed on the Arduino.
+
+And honestly? The impetus for staying on the Arduino was weak indeed; 
+the Pi is a much more flexible platform and is a lot more fun to work with, for me.
+
+So how do I manage so many inputs with digital IO only? Well... enter I2C.
+
+I2C is a serial bus for integrated chips. Basically, you wire a series of I2C 
+chips (up to seven in a single series) and send a set of control bytes 
+to those chips.
+
+There are two very common variants of I2C chips: the MCP23008 and the MCP23017.
+The main difference between them is that the MCP23008 has eight digital pins available,
+and the MCP23017 has sixteen.
+
+I had some MCP23008 chips lying around, and I had no MCP23017 chips; 
+guess which ones I ended up using. (If you guessed "the MCP23017," 
+you're incorrect; try again.)
+
+I used Gordon Prescott's http://wiringpi.com/[WiringPi] project to 
+test out the I2C bus by writing to a series of LEDs. Once I had that working 
+(which was really quite simple), I simply wired up the pedals to the I2C
+chips in order, and tested the reads.
+
+Bounce was still a concern, but determining which pedal was 
+pressed was *definitely* no longer an issue. In fact, it was trivial to manage
+polyphony.
+
+One thing to note here is that reading the digital pins, 
+even over I2C, was _incredibly_ fast compared to reading the analog pins.
+Part of this is the much faster clock speed of the Pi, but the other
+aspect is the digital nature; determining an on/off value is simply faster.
+
+As a result, it was easier to detect bounce... but in the end, it was
+easier to eliminate it through software, too.
+
+What I did was quite simple, and based largely on what I'd 
+already done for the Arduino. 
+
+I wrote a control loop that read each pin, and saved the last thirteen readings.
+After each read, I checked to see whether the "on" state or the "off" state
+was more common in the history, and used that for my "current state." 
+
+Bounce would cause the values to alternate, *trending* towards the correct state, so
+this simple mechanism would give me a debounced signal very quickly.
+
+Now I could determine the notes pressed in tenths of milliseconds. 
+Not perfect, to be sure, but certainly within error tolerances. Now I could
+focus my attention on writing MIDI data, with at least eight 
+or nine milliseconds to burn before I violated my requirements.
+
+Here, I discovered my software design was... interesting. It
+was originally coded in \C++, as a near-direct port from the Arduino
+Sketch. There was a single all-powerful (and never-ending) loop that
+checked the inputs, and sent note data if a change was detected
+for a given pin.
+
+This meant that it was conceptually difficult to check for multiple
+*types* of inputs. If I added a non-musical button, I would have to
+modify the loop to check for that, and manage that button's state
+as well.
+
+If I'm on a decent processor, with a real OS, shouldn't I be 
+able to have simpler code?
+
+Yes. Yes, I should.
+
+I then altered the code to use +Boost::thread+. I then took the loop out 
+of +main()+ routine, stuck it in a method rather innovatively called +loop()+, 
+and initialized it with:
+
+----
+boost::thread t(loop);
+----
+
+Bingo. Instant threading; I could then add other similar loops to simply 
+use the processor as needed. 
+
+NOTE: This wasn't especially done properly; I'll describe more later. 
+There was an interesting bug associated with how I detected the notes,
+and also some state was leaked in ways that I really don't like.
+
+So what did I need other inputs for? Well... my other requirements.
