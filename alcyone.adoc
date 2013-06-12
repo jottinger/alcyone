@@ -1,1 +1,349 @@
-../asciidoc/alcyone.adoc
+= Alcyone: A development history
+Joseph B. Ottinger <joeo@enigmastation.com>
+:toc:
+:icons:
+
+Alcyone is the project name given to a MIDI controller, a system designed to yield
+not only a usable musical instrument, but to yield information to guide the design of
+other musical instruments.
+
+It was (and is) guided by engineering principles: general requirements, along with 
+specific inputs and outputs and some optional features and future potential enhancements.
+
+== Specifications
+
+Alcyone is designed with a primary goal of being a MIDI controller.
+
+http://www.midi.org[MIDI] stands for "Musical Instrument Digital Interface", 
+described on http://en.wikipedia.org/wiki/MIDI[Wikipedia] as:
+
+___... a technical 
+standard that describes a protocol, digital interface and connectors and allows
+ a wide variety of electronic musical instruments, computers and other
+ related devices to connect and communicate with one another.___
+
+MIDI is a serial protocol; it normally uses a Din5 connector (a five-pin, round port),
+but one can certainly use USB (which is part of many recent devices' designs), FireWire, 
+or a DA-15 game port, for example. As a serial protocol, almost any transport that can 
+support serial operations can be supported,
+including http://www.tobias-erichsen.de/software/rtpmidi.html[TCP/IP].
+
+Given than the Alcyone is designed as a MIDI controller, the MIDI specification 
+factors very heavily into the design, and is summarized in brief fashion in this document
+with respect to how Alcyone is affected.
+
+== Requirements
+
+Alcyone's original design had two kinds of requirements: *mandatory* 
+requirements and *optional* requirements. Each of the requirements and their 
+implications will be addressed.
+
+=== Mandatory Requirements
+
+In order to be considered feature-complete, the Alcyone device must:
+
+. Be able to deliver MIDI Note-On and Note-Off events to a 
+standard MIDI receiver with less than 10 ms latency.
+. Be able to transpose the current notes by octaves, 
+including some mechanism to control this.
+. Be stable enough to withstand being played as a secondary instrument on stage.
+
+=== Optional Requirements
+
+It would be _nice_ if the Alcyone device were able to:
+
+. Generate some usable audio via an onboard 1/8" or 1/4" output jack.
+. Generate MIDI SysEx data for the purpose of controlling MIDI receivers.
+. Consume MIDI SysEx data for internal control (primarily saving configuration data).
+. Generate velocity information for the Note-On events.
+. Preserve "current settings" for restoration of current state after power-down events.
+
+== MIDI Implications
+
+To understand more about how MIDI is used, one must understand a little about music.
+This section is not intended to be a complete summary of the MIDI specification, nor
+is it intended to teach how sound is generated and perceived, but rather focuses on
+MIDI as it affects the Alcyone controller. For more (and more accurate) information, 
+please check the actual MIDI specifications.
+
+Western music is organized in groupings of _twelve notes_ per _octave_. 
+(In physical terms, the note controls the *pitch* of a sound wave.) A given note also 
+has volume (or, rather, "how the note is played" -- which is an indicator of its *amplitude*.) 
+In MIDI terms, how hard a note is struck or played is referred to as _velocity_, 
+with "volume" being an aspect of how the actual instrument is amplified (and thus, not something
+with which MIDI concerns itself.)
+
+For the purposes of the Alcyone, MIDI uses three types of events 
+to communicate with musical instruments. They are "_note events_,"
+"_control events_", and "_global events_". (Global events are referred to
+in the MIDI specifications as part of the note event set, but for the 
+purposes of the Alcyone they're handled separately.)
+
+MIDI includes the concept of a _channel_ to allow specific targeting for event data. 
+As a serial protocol, MIDI 
+connections are expected to be chained in a series; a MIDI receiver or producer
+can be set to listen to a given channel such that it ignores any data created
+for a different channel. MIDI supports sixteen channels.
+
+A *note event* indicates whether a note is to be turned on or off, 
+which note is to be turned on or off, which channel 
+the note event is targeting, and the velocity of the note event. 
+
+A *control event* is a "system exclusive" message in the MIDI 
+specification, referred to as "*SysEx*" messages. A SysEx message is a custom message
+targeted towards a specific instrument, and provides a way for each MIDI
+instrument to do specific unique operations. A SysEx message has a standard format,
+but not a standard meaning.
+
+A *global event* is a specific set of note events, generally aimed at system resets
+in the event that a MIDI instrument is in an unknown state. Global events 
+are "panic button" events.
+
+== Rationales
+
+The original intents behind this project were to yield an actual playable
+instrument and to determine what concerns would need to be addressed in order
+to design entirely new instruments. 
+
+In other words, the Alcyone was a "test run" for musical instruments.
+
+The original inspiration was the Moog Taurus. The Taurus was a synthesizer 
+in footpedal form, as part of the Moog _Constellation_ ensemble, with the other
+synthesizers in the ensemble being the Apollo and the Lyra.
+
+NOTE: The Constellation never made it into the wild. Keith Emerson played 
+a prototype in 1973, but the Lyra was never produced. The Apollo's design
+ended up being released as the Polymoog.
+
+The Taurus was popular not only because it had Moog's excellent filter 
+systems (therefore possessing a very unique and pleasant sound) but because 
+bands like Genesis and Rush used it to provide an extra sound palette. 
+Rush, for example, was well-known for using the Taurus to provide a 
+wall of sound from only three musicians.
+
+As a guitarist (and an admittedly rabid fan of Rush), a Taurus-like
+instrument holds a lot of appeal. As a creative engineer, the ability
+to create _other_ forms of instruments is also appealing.
+
+The name of "Alcyone" is derived from the Taurus as well, from a series of
+(possibly) logical leaps:
+
+. "Taurus," as a part of the "Constellation" ensemble, is the 
+name of a constellation.
+. The device being created is somewhat analogous. Therefore, perhaps the
+name of a star from the Taurus constellation might work.
+. The brightest star in the Taurus constellation is Aldebaran. This is too
+difficult for me to say repeatedly.
+. The second brightest star in the Taurus constellation is Tau. However, 
+there's already an instrument with which I'm familiar called the Tau, 
+from Eigenharp.
+. The third brightest star in the Taurus constellation is Alcyone 
+(pronounced "al-SEE-on-EE"), named for
+a tragic heroine in Greek myth.
+. Alcyone fits the requirement that I be able to pronounce it easily, plus
+it's obscure enough to not conflict with any other instrument with which I'm
+familiar, plus if one wants to know what it means, there's a chance for
+continuing education.
+
+Total win on the name... or, at least, enough of a win that I'm 
+satisfied with it. It's also a _much_ better name than my original working
+name of "_Frankenpedals_."
+
+== Milestones and Implementation History
+
+The major milestones in the design of the Alcyone looked something like this:
+
+. Acquisition of the pedal mechanism
+. Detection of the pedal state
+. Production of MIDI event
+. Production of MIDI event based on pedal state
+. Ergonomic design
+
+Naturally, there are some milestones that are implied from these, and there are 
+also some milestones that were added due to things I found out during
+implementation. They'll be pointed out as we go through the history.
+
+=== Acquisition of the pedal mechanism
+
+Before you can play any pedals, you have to *have* pedals. The "normal approach"
+to pedals is to look for a set salvaged from an old Hammond or Lowrey home organ,
+via http://ebay.com[EBay]. This is not only doable, it's inexpensive; I found 
+a thirteen-note pedal board from a Lowrey organ for roughly $50 USD.
+
+Shipping was problematic; the seller shipped them quickly, and packed them well,
+but two of the pedals still broke in shipping. Again, this was _not the seller's fault_. 
+However, it presented another milestone to address:
+
+1.a. Pedals must be uniform and playable
+
+The pedals came with the original Lowrey http://en.wikipedia.org/wiki/CV/Gate[CV/Gate] mechanism, which 
+by one standard generates one 
+volt per note on the pedals... I think. I didn't have a working schematic, nor did I
+have any equipment with the ability to tolerate high voltages 
+(where 12v="high voltage").
+
+The notes were detected through the use of a rocker on each pedal. Each pedal 
+had a high and low contact point; as the pedal was pressed, the rocker switch 
+moved a spring such that it connected the two contacts, which presented a 
+closed circuit.
+
+I needed to be able to detect the circuit, but the presumed 
+CV/Gate mechanism was what I
+wanted to _replace_, so I ripped out all of the existing circuitry. This also lowered
+the physical profile of the circuit, providing another secondary benefit.
+
+=== Detection of Pedal State
+
+My first choice of hardware platform was an 
+http://arduino.cc/en/Main/arduinoBoardUno[Ardiuno Uno]. This provided me with a
+convenient development environment on http://fedoraproject.org[Fedora], by running
+a simple command: +sudo yum install arduino+.
+
+The Arduino Uno is a nice device, with thirteen GPIO pins and six analog pins, 
+each usable for reading and writing.
+
+Thirteen GPIO pins, with thirteen notes to detect; this sounds like it might be 
+a convenient match. *But it isn't.*
+
+Why? Because of MIDI. The end goal is to generate serial output as required 
+by the MIDI spec, and two of the GPIO pins are used for serial I/O. So while I had
+many of the digital pins I needed, I didn't have enough of them.
+
+NOTE: Arduino aficionados will correctly point out that the analog pins can also
+be used digitally; if my options were truly limited, I would have used this route.
+However, I was trying to keep in mind a larger plan. Thirteen inputs implies nothing
+larger than a thirteen-note keyboard, but I wanted to have the potential for a 
+twenty-five note pedal board as well.
+
+There are certainly multiple ways to address this situation, but the one I ended up 
+attempting was the creation of a *resistor ladder*. 
+
+A resistor ladder supplies a circuit such that multiple resistors are wired to
+switches; as the switches are closed, the resistors fire into action and change
+the resistance over the whole circuit.
+
+Therefore, you can detect one of nearly any number of inputs.
+
+The code for this was pretty simple. I wrote a small program to output an
+analog reading, then depressed each pedal in sequence; this gave me a rough
+idea of what the resulting resistance would be. There was some fluctuation,
+but the numbers were generally consistent.
+
+Therefore, I easily wrote an Arduino sketch to read the analog pin, and 
+compare the reading to an internal array; this gave me the "current note."
+
+This may have been easy to write, but it was not good enough.
+
+The switches trended towards "bounce." Bounce is the tendency of a 
+signal to fluctuate while a mechanical connection is stabilizing. When you 
+have a spring dragged across a contact, as in this situation, the connection 
+is made, then unmade, then made - very rapidly - until the spring stops moving.
+
+But wait - there's more! Not only did the switch bounce, but the 
+resistors introduced inconsistency. Resistors have different *tolerances*, which
+indicates roughly how much variance they have. A 5% variance on a 100 Ohm 
+resistor means that you might get 105 Ohms, then 95 Ohms, then 102 
+Ohms - generally within the tolerance, and (normally) not far outside
+of the tolerance range, if at all.
+
+However, in the resistor ladder, you have many resistors in series; pressing
+a pedal far down the ladder (where you might have ten or thirteen resistors
+to pass through) introduces that variance *on every resistor*. 
+The resulting tolerance is, um, *significant*.
+
+In addition, the way the Arduino itself reads the analog values introduces
+some instability. As I understand it, the Arduino samples the analog pins
+multiple times, then returns an averaged value. So bounce introduces a
+lowered average result until the value stabilizes, in which case your numbers
+should be somewhat predictable.
+
+So these three factors - bounce, plus resistor tolerances, plus the Arduino
+managing the analog pin readings - added up to some very inconsistent readings.
+
+It was *very* normal to have the Arduino detect a *lower* pedal before stabilizing
+around the correct pedal - and then it would fluctuate around the neighboring
+pedals, simply through resistor variance. In some cases, it went further than the
+neighboring pedals and went up or down two pedals (and, in one case, three). 
+
+For music, this error, introduced by tolerance, is intolerable.
+
+I tried to work around this by adding a fourier transform. Basically, I oversampled
+the analog pin, sorted the results, and eliminated outliers, giving me a 
+generalized central reading - a median reading. (I tried average reading, too, 
+but that was less consistent than the median reading.)
+
+NOTE: The difference between "median" and "average" can be subtle. In a set of 
+"1, 2, 3, 4, 10", the average is four (the sum of 1, 2, 3, 4, and 10 is 20,
+20/5 = 4), and the median is the middle value, thus 3. Math, kids, math!
+
+It didn't work. I eventually achieved stability - meaning that I got 
+none of the "wrong pedals" detected - but the mechanism was always slow.
+It took anywhere from 14 to 30 milliseconds to actually stabilize the value.
+
+The probable cause here was the resistors, in all honesty. If I'd 
+invested in some very low tolerance resistors, I'm convinced that I could
+have trimmed down the detection to less than a millisecond (although I
+could be wrong, since I haven't invested in such resistors and 
+thus have no data).
+
+The milestone I was trying to meet was the detection of the proper pedal 
+in less than ten milliseconds. (Actually, it's to detect the note 
+*and* send MIDI data in less than ten milliseconds, but let's start small.)
+
+Given that I couldn't detect a stable note in less than fourteen milliseconds,
+I was clearly not achieving the full milestone - but I *was* at least detecting
+the pedal, which meant I could work on the other mechanisms, while considering
+how to optimize this one.
+
+The next step was to send a MIDI note. The MIDI data for Note events is 
+really pretty simple, being three bytes only.
+
+The first byte is made of two nybbles. The first nybble indicates the 
+event type (with +b1000+, or +0x8+, being "note off", and +b1001+, or +0x9+, 
+meaning "note on"). The second nybble is the channel number. Therefore,
+a "note off" event on channel two would have a first byte of +0x82+.
+
+The second byte is a value from 0 to 127 (i.e., seven bits, 
+with a most significant bit of 0) indicating the
+note on the western chromatic scale.
+
+The third byte is another seven-bit value indicating the velocity of the 
+note. Therefore, to turn on note 42 on channel three at maximum velocity, 
+the three-byte sequence would be +0x93+, +0x2a+, +0x7f+. Turning
+that note off looks very similar, although the velocity isn't important 
+(and thus is typically set to 0): +0x83+, +0x2a+, +0x00+.
+
+The next thing to consider is the actual transport. I bought an Arduino 
+https://www.sparkfun.com/products/9598[MIDI breakout board] 
+from https://www.sparkfun.com[Sparkfun], and soldered it together; that
+gave me a simple serial output to use. 
+
+Open the serial port at 31250 baud, send data; that's all it took... sort of.
+
+NOTE: Why 31250 baud? Well, apparently that's easily worked with by 
+1Mhz processors, which were apparently the bee's knees when the MIDI spec
+was being written. And nobody's fixed it, because while it's unusual, it's
+not that broken. And if it is, well, MIDI has bigger problems.
+
+Being able to send MIDI data is all well and good, but it doesn't help much
+if you can't detect it. 
+
+One way to detect MIDI data is to set up a
+synthesizer (which was my first solution; I set up an 
+http://www.arturia.com/evolution/en/products/moogmodularv/intro.html[Arturia Moog Modular] 
+virtual synthesizer and let it honk away).
+
+However, my family protested the noise (the synthesizer's bleeps and bloops, and my
+cries of "Eureka!")
+
+Another solution was to set up a MIDI signal tracker, or 
+http://www.midiox.com/[MIDI OX]. The Linux equivalent
+is http://home.gna.org/gmidimonitor/[gmidimonitor]. Now I could
+watch the MIDI data digitally, and validate velocity values as well.
+
+NOTE: It's worth pointing out for the sake of honesty that I was
+developing on Linux - because developing on Linux is easy and developing
+on Windows is like driving a spike through your head, slowly - but testing
+the MIDI data on Windows, mostly because sound configuration on Windows
+was easy and sound configuration on Linux was... less easy. By a lot. 
+It's funny; sound on Windows is like development on Linux, and vice versa. :)
