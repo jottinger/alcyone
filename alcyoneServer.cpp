@@ -43,8 +43,7 @@ void logHttpRequest(WPP::Request* req, WPP::Response* res)
 
 void handleRequest(WPP::Request* req, WPP::Response* res)
 {
-    if(verbose)
-    {
+    if(verbose==true) {
         logHttpRequest(req, res);
     }
 
