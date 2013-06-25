@@ -12,9 +12,16 @@ specific inputs and outputs and some optional features and future potential enha
 
 == Specifications
 
-Alcyone is designed with a primary goal of being a MIDI controller.
+Alcyone is designed with a primary goal of being a MIDI controller, which means
+it generates musical note data based on some kind of stimulus. 
 
-http://www.midi.org[MIDI] stands for "Musical Instrument Digital Interface", 
+NOTE: Other examples of MIDI controllers are instruments like stage 
+pianos; they're not actually pianos, but they are played as if they were.
+These controllers feed either internal or external synthesizers to generate
+sound.
+
+The musical note data is sent via http://www.midi.org[MIDI], which stands 
+for "Musical Instrument Digital Interface", 
 described on http://en.wikipedia.org/wiki/MIDI[Wikipedia] as:
 
 ___... a technical 
@@ -163,7 +170,7 @@ Naturally, there are some milestones that are implied from these, and there are
 also some milestones that were added due to things I found out during
 implementation. They'll be pointed out as we go through the history.
 
-=== Acquisition of the pedal mechanism
+=== Milestone: Acquisition of the pedal mechanism
 
 Before you can play any pedals, you have to *have* pedals. The "normal approach"
 to pedals is to look for a set salvaged from an old Hammond or Lowrey home organ,
@@ -192,7 +199,7 @@ CV/Gate mechanism was what I
 wanted to _replace_, so I ripped out all of the existing circuitry. This also lowered
 the physical profile of the circuit, providing another secondary benefit.
 
-=== Detection of Pedal State
+=== Milestone: Detection of Pedal State
 
 My first choice of hardware platform was an 
 http://arduino.cc/en/Main/arduinoBoardUno[Ardiuno Uno]. This provided me with a
@@ -233,7 +240,8 @@ Therefore, I easily wrote an Arduino sketch to read the analog pin, and
 compare the reading to an internal array; this gave me the "current note."
 
 NOTE: One thing to notice here is that the resistor ladder was monophonic. That is,
-it could detect only one note at a time. It's possible to create a polyphonic
+it could detect only one note at a time - the note that had the most resistance 
+in the circuit. It's possible to create a polyphonic
 resistor ladder by using different resistor values; you can 
 basically subtract the resistance until you eliminate all values to determine
 multiple notes. I... didn't do that, and didn't really need to.
@@ -273,8 +281,11 @@ neighboring pedals and went up or down two pedals (and, in one case, three).
 
 For music, this error, introduced by tolerance, is intolerable.
 
-I tried to work around this by adding a fourier transform. Basically, I oversampled
-the analog pin, sorted the results, and eliminated outliers, giving me a 
+I tried to work around this by adding a fourier transform. Basically, I 
+changed the sample mechanism to cut out some of the Arduino's built-in
+sampling, did a manual oversampling of the
+the analog pin (which actually helped!), 
+sorted the results, and eliminated outliers, giving me a 
 generalized central reading - a median reading. (I tried average reading, too, 
 but that was less consistent than the median reading.)
 
@@ -292,7 +303,7 @@ have trimmed down the detection to less than a millisecond (although I
 could be wrong, since I haven't invested in such resistors and 
 thus have no data).
 
-=== Production of MIDI event
+=== Milestone: Production of MIDI event
 
 The milestone I was trying to meet was the detection of the proper pedal 
 in less than ten milliseconds. (Actually, it's to detect the note 
@@ -308,8 +319,8 @@ really pretty simple, being three bytes only.
 
 The first byte is made of two nybbles. The first nybble indicates the 
 event type (with +b1000+, or +0x8+, being "note off", and +b1001+, or +0x9+, 
-meaning "note on"). The second nybble is the channel number. Therefore,
-a "note off" event on channel two would have a first byte of +0x82+.
+meaning "note on"). The second nybble is the channel number, starting at zero. 
+Therefore, a "note off" event on the third channel would have a first byte of +0x82+.
 
 The second byte is a value from 0 to 127 (i.e., seven bits, 
 with a most significant bit of 0) indicating the
@@ -356,7 +367,7 @@ the MIDI data on Windows, mostly because sound configuration on Windows
 was easy and sound configuration on Linux was... less easy. By a lot. 
 It's funny; sound on Windows is like development on Linux, and vice versa. :)
 
-=== Production of MIDI event based on pedal state
+=== Milestone: Production of MIDI event based on pedal state
 
 Since I was able to detect a pedal being pressed, and I was able to 
 send a MIDI note as well, the next thing to do was to send the note associated
@@ -388,7 +399,8 @@ Time to switch platforms to try something else.
 
 The http://raspberrypi.org[Raspberry Pi] is an embeddable computing platform
 aimed primarily at education. It was designed with *very* low costs in mind, and
-can be found for $35 USD (for a machine with an ARM processor at 700 MHz, ethernet, 
+can be found for $35 USD (for a machine with an ARM 
+processor at a defalut speed of 700 MHz, ethernet, 
 USB, HDMI, composite video, an 1/8" audio jack, GPIO pins, and 512MB RAM). 
 
 The cost was roughly equivalent to the Arduino Uno - but the RAM and processing power
@@ -480,3 +492,27 @@ There was an interesting bug associated with how I detected the notes,
 and also some state was leaked in ways that I really don't like.
 
 So what did I need other inputs for? Well... my other requirements.
+
+=== Milestone: Transposition
+
+_Transposition_ is the offset of one note on the scale such that it
+ends up being a different note. The physical pedal corresponding to
+_C_, for example, might be transposed up to a _D_ (which means all of
+the other pedals are also transposed.)
+
+Transposition can be on a note-by-note level (known as "steps") or, 
+as is more common, on an octave-by-octave level.
+
+Notes in music are grouped as sets of twelve pitches, such that each 
+higher group is known as an octave (with eight of the twelve notes 
+comprising a scale.) So octave transposition is a way of leaving the 
+_C_ pedal as a _C_, but playing a higher or lower pitch, as desired.
+
+This is actually very easy to write; for two transposition modes 
+(step and octave), you'd maintain two integers, and add the step 
+transposition and the octave transposition (times twelve) to arrive
+at the actual note.
+
+However, how to _specify_ the transposition and octave is the bigger
+problem.
+
