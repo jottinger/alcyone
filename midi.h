@@ -55,8 +55,11 @@ public:
     {
         change(&channel, 1, 16, direction);
     }
-    void noteOn(unsigned char note);
-    void noteOff(unsigned char note);
+    void noteOn(unsigned int channel, unsigned int note);
+    void noteOff(unsigned int channel, unsigned int note);
+    unsigned int getNote(unsigned int note) {
+        return note+getOctave()*12+getTransposition();
+    }
     inline int getOctave() {
         return octave;
     }

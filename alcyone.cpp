@@ -40,6 +40,8 @@ options::variables_map vm;
 MIDI midi;
 Debouncer debouncer[13];
 int previousState[13];
+int previousChannel[13];
+int previousNote[13];
 int exitAlcyone=0;
 bool verbose;
 extern int ALCYONE_SERVER_PORT;
@@ -97,6 +99,8 @@ void setup() {
     mcps.push_back(util);
     for(int i=0; i<13; i++) {
         previousState[i]=0;
+        previousNote[i]=0;
+        previousChannel[i]=0;
     }
 }
 
@@ -122,10 +126,14 @@ void loop() {
                 flareTime-=2;
                 // JBO Too Noisy!
                 // std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
-                if(previousState[pin]) { // new state: OFF
-                    midi.noteOff(12-pin); // when wired, pin 0 is the HIGH C
+                register unsigned int offset=12-pin;
+                if(previousState[pin]) { // new state: OFF                
+                    midi.noteOff(previousChannel[offset], previousNote[offset]); // when wired, pin 0 is the HIGH C
                 } else {
-                    midi.noteOn(12-pin);
+                    unsigned int note=midi.getNote(offset);
+                    midi.noteOn(midi.getChannel(), offset);
+                    previousNote[offset]=note;
+                    previousChannel[offset]=midi.getChannel();
                 }
                 previousState[pin]=state;
             }

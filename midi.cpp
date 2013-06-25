@@ -39,20 +39,23 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
     }
 }
 
-void MIDI::noteOn(unsigned char note) {
-    send(0x90+channel-1);
-    send(note+getOctave()*12+getTransposition());
+/**
+ *This sends the ACTUAL NOTE as a note-off. NOT calculated.
+ */
+void MIDI::noteOn(unsigned int _channel, unsigned int note) {
+    send(0x90+_channel-1);
+    send(note);
     send(velocity & 127);
     if(verbose) {
-        std::clog << "Note on: note " << note+getOctave()*12+getTransposition()
+        std::clog << "Note on: note " << note
                   << " octave " << getOctave()
                   << ", velocity " << (velocity & 127) << std::endl;
     }
 }
 
-void MIDI::noteOff(unsigned char note) {
-    send(0x80+channel-1);
-    send(note+getOctave()*12+getTransposition());
+void MIDI::noteOff(unsigned int _channel, unsigned int note) {
+    send(0x80+_channel-1);
+    send(getNote(note));
     send(0);
     if(verbose) {
         std::clog << "Note off: note " << note+getOctave()*12+getTransposition()
