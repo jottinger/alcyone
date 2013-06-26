@@ -516,3 +516,31 @@ at the actual note.
 However, how to _specify_ the transposition and octave is the bigger
 problem.
 
+This involves some kind of external control. 
+
+External control leads us
+back to the experiment with the LCD.
+
+If you remember, the Arduino's thirteen digital I/O pins (and six analog pins)
+were a limitation because we needed a pin for each of the
+pedals' digital inputs, plus some for the LCD... which means we have
+very little room for any external switches. Assuming that
+*all* we need is a single transposition feature, well, we *can* get
+by with one button (with it rotating around to reset the transposition.)
+
+Having a setting that rotates is horribly inconvenient, 
+but we might be able to live with it.
+
+However, we need more than one; transposition over octaves would be entirely
+unusable (you'd have to support eighty-eight different states, and rotate
+through all eighty-eight to set it and then _reset_ it.)
+
+You could theoretically do the same thing with octaves; you only have five
+usable octaves (octaves 2, 3, 4, 5, 6, and 7).
+
+It's getting worse and worse!
+
+And there is actually one more setting we would need: the midi channel. 
+There are sixteen of those, so while that's feasible...
+
+We're looking at a user experience nightmare.
