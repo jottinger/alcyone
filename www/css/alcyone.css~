@@ -1,0 +1,33 @@
+* {
+}
+
+body {
+	color: white;
+	font-family: Georgia, Verdana, sans;
+	background-image: url("/images/taurus.jpg");
+	background-size: cover;
+}
+
+hgroup {
+	text-align: center;
+}
+
+nav ul {
+    list-style: none; padding: 0px; display: block;
+    clear: right; background-color: #666;
+    padding-left: 4px; height: 24px;
+}
+
+nav ul li {
+    display: inline; padding: 0px 20px 5px 10px;
+    height: 24px; border-right: 1px solid #ccc;
+}
+
+nav ul li a {
+    color: #EFD3D3; text-decoration: none;
+    font-size: 13px; font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #fff;
+}

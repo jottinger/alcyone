@@ -1,0 +1,11 @@
+.ui-btn-inline {
+	width:150px;
+}
+
+.label {
+	margin-left: 5px;
+	width:150px;
+	text-align:center;
+	font-size: x-large;
+	font-weight:bold;
+}
