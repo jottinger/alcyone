@@ -55,41 +55,41 @@ void handleRequest(WPP::Request* req, WPP::Response* res)
         case MSG_RESET:
             if(verbose==true)
             {
-                std::cout << "(MSG_RESET)";
+                std::cout << "(MSG_RESET)" << std::endl;
             }
             state->resetToDefaults();
             break;
         case MSG_MIDI_RESET:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_RESET)";
+                std::cout << "(MSG_MIDI_RESET)" << std::endl;
             }
             state->reset();
             break;
         case MSG_REQUEST_STATUS:
             if(verbose==true)
             {
-                std::cout << "(MSG_REQUEST_STATUS)";
+                std::cout << "(MSG_REQUEST_STATUS)" << std::endl;
             }
             break;
         case MSG_MIDI_OCTAVE_CHANGE:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_OCTAVE_CHANGE)" << message;
+                std::cout << "(MSG_MIDI_OCTAVE_CHANGE)" << message << std::endl;
             }
             state->changeOctave(message);
             break;
         case MSG_MIDI_CHANNEL_CHANGE:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_CHANNEL_CHANGE)" << message;
+                std::cout << "(MSG_MIDI_CHANNEL_CHANGE)" << message << std::endl;
             }
             state->changeChannel(message);
             break;
         case MSG_MIDI_TRANSPOSITION_CHANGE:
             if(verbose==true)
             {
-                std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE) " << message;
+                std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE) " << message << std::endl;
             }
             state->changeTransposition(message);
             break;

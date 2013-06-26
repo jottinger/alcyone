@@ -4,8 +4,12 @@
 
 .label {
 	margin-left: 5px;
-	width:150px;
+	width:100%;
 	text-align:center;
 	font-size: x-large;
 	font-weight:bold;
+}
+
+.ui-grid-b, .ui-grid-a {
+	text-align:center;
 }

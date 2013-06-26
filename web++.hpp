@@ -507,6 +507,7 @@ namespace WPP {
             sprintf(header_buffer, "HTTP/1.0 %d\r\n", res.code);
 
             // append headers
+            sprintf(&header_buffer[strlen(header_buffer)], "Access-Control-Allow-Origin: *\r\n");
             sprintf(&header_buffer[strlen(header_buffer)], "Server: %s %s\r\n", SERVER_NAME, SERVER_VERSION);
             sprintf(&header_buffer[strlen(header_buffer)], "Content-Type: %s\r\n", res.type.c_str());
             sprintf(&header_buffer[strlen(header_buffer)], "Content-Length: %zd\r\n", body_len);
