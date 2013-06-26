@@ -39,12 +39,9 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
     }
 }
 
-/**
- *This sends the ACTUAL NOTE as a note-off. NOT calculated.
- */
 void MIDI::noteOn(unsigned int _channel, unsigned int note) {
     send(0x90+_channel-1);
-    send(note);
+    send(getNote(note));
     send(velocity & 127);
     if(verbose) {
         std::clog << "Note on: note " << note
@@ -53,9 +50,12 @@ void MIDI::noteOn(unsigned int _channel, unsigned int note) {
     }
 }
 
+/**
+ *This sends the ACTUAL NOTE as a note-off. NOT calculated.
+ */
 void MIDI::noteOff(unsigned int _channel, unsigned int note) {
     send(0x80+_channel-1);
-    send(getNote(note));
+    send(note);
     send(0);
     if(verbose) {
         std::clog << "Note off: note " << note+getOctave()*12+getTransposition()
@@ -65,6 +65,14 @@ void MIDI::noteOff(unsigned int _channel, unsigned int note) {
 
 void MIDI::reset() {
     send(0xb0+channel-1); // system reset for channel
-    send(121); // not sure why 121 is recommended here.
+    send(121); // reset all controllers
+    send(0x00);
+
+    send(0xb0+channel-1); // system reset for channel
+    send(120); // sound off
+    send(0x00);
+
+    send(0xb0+channel-1); // system reset for channel
+    send(123); // all notes off
     send(0x00);
 }
