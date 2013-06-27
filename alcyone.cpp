@@ -24,6 +24,7 @@
 #include <boost/thread.hpp>
 #include <boost/program_options.hpp>
 
+#include "config.h"
 #include "mcp23008.h"
 #include "alcyoneServer.h"
 #include "debounce.h"
@@ -52,9 +53,9 @@ void loop();
 int main(int argc, char **argv) {
     desc.add_options()
     ( "help", "produce help message")
-    ( "verbose", options::value<bool>(&verbose)->default_value(true),
+    ( "verbose", options::value<bool>(&verbose)->default_value(DEFAULT_VERBOSITY),
       "verbose mode" )
-    ( "port", options::value<int>(&ALCYONE_SERVER_PORT)->default_value(8090),
+    ( "port", options::value<int>(&ALCYONE_SERVER_PORT)->default_value(DEFAULT_HOST_PORT),
       "server port" )
     ;
     options::store(options::parse_command_line(argc, argv, desc), vm);

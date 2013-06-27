@@ -1,0 +1,10 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__ 1
+
+#define DEFAULT_VERBOSITY @default_verbose_value@
+#define DEFAULT_HOST_PORT @default_host_port@
+#define DEFAULT_FLARE_TIME @default_flare_time@
+#define MIN_FLARE_TIME @min_flare_time@
+#define MAX_FLARE_TIME @max_flare_time@
+
+#endif
