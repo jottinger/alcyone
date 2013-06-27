@@ -47,66 +47,70 @@ void handleRequest(WPP::Request* req, WPP::Response* res)
         logHttpRequest(req, res);
     }
 
-    try
-    {
-        int message=atoi(req->query.at("message").c_str());
-        switch(message & 0xf0)
+    const char *data=req->query.at("message").c_str();
+    if(strlen(data)<6) {
+        int message=atoi(data);
+        try
         {
-        case MSG_RESET:
-            if(verbose==true)
+
+            switch(message & 0xf0)
             {
-                std::cout << "(MSG_RESET)" << std::endl;
+            case MSG_RESET:
+                if(verbose==true)
+                {
+                    std::cout << "(MSG_RESET)" << std::endl;
+                }
+                state->resetToDefaults();
+                break;
+            case MSG_MIDI_RESET:
+                if(verbose==true)
+                {
+                    std::cout << "(MSG_MIDI_RESET)" << std::endl;
+                }
+                state->reset();
+                break;
+            case MSG_REQUEST_STATUS:
+                if(verbose==true)
+                {
+                    std::cout << "(MSG_REQUEST_STATUS)" << std::endl;
+                }
+                break;
+            case MSG_MIDI_OCTAVE_CHANGE:
+                if(verbose==true)
+                {
+                    std::cout << "(MSG_MIDI_OCTAVE_CHANGE)" << message << std::endl;
+                }
+                state->changeOctave(message);
+                break;
+            case MSG_MIDI_CHANNEL_CHANGE:
+                if(verbose==true)
+                {
+                    std::cout << "(MSG_MIDI_CHANNEL_CHANGE)" << message << std::endl;
+                }
+                state->changeChannel(message);
+                break;
+            case MSG_MIDI_TRANSPOSITION_CHANGE:
+                if(verbose==true)
+                {
+                    std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE) " << message << std::endl;
+                }
+                state->changeTransposition(message);
+                break;
+            default:
+                /* unknown message type, say so */
+                std::cerr << "Unknown message received from controller: "
+                          << std::setbase(1) << message << std::setbase(10)
+                          << std::endl;
+                break;
             }
-            state->resetToDefaults();
-            break;
-        case MSG_MIDI_RESET:
-            if(verbose==true)
-            {
-                std::cout << "(MSG_MIDI_RESET)" << std::endl;
-            }
-            state->reset();
-            break;
-        case MSG_REQUEST_STATUS:
-            if(verbose==true)
-            {
-                std::cout << "(MSG_REQUEST_STATUS)" << std::endl;
-            }
-            break;
-        case MSG_MIDI_OCTAVE_CHANGE:
-            if(verbose==true)
-            {
-                std::cout << "(MSG_MIDI_OCTAVE_CHANGE)" << message << std::endl;
-            }
-            state->changeOctave(message);
-            break;
-        case MSG_MIDI_CHANNEL_CHANGE:
-            if(verbose==true)
-            {
-                std::cout << "(MSG_MIDI_CHANNEL_CHANGE)" << message << std::endl;
-            }
-            state->changeChannel(message);
-            break;
-        case MSG_MIDI_TRANSPOSITION_CHANGE:
-            if(verbose==true)
-            {
-                std::cout << "(MSG_MIDI_TRANSPOSITION_CHANGE) " << message << std::endl;
-            }
-            state->changeTransposition(message);
-            break;
-        default:
-            /* unknown message type, say so */
-            std::cerr << "Unknown message received from controller: "
-                      << std::setbase(1) << message << std::setbase(10)
-                      << std::endl;
-            break;
         }
-    }
-    catch(const std::out_of_range& e)
-    {
-        // write an error
-        if(verbose)
+        catch(const std::out_of_range& e)
         {
-            std::cerr << "Error: invalid request (no 'message')" << std::endl;
+            // write an error
+            if(verbose)
+            {
+                std::cerr << "Error: invalid request (no 'message')" << std::endl;
+            }
         }
     }
 // respond with the current status, no matter what
