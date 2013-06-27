@@ -138,30 +138,6 @@ alcyone.cpp.s:
 	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/alcyone.cpp.s
 .PHONY : alcyone.cpp.s
 
-alcyoneServer.o: alcyoneServer.cpp.o
-.PHONY : alcyoneServer.o
-
-# target to build an object file
-alcyoneServer.cpp.o:
-	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/alcyoneServer.cpp.o
-.PHONY : alcyoneServer.cpp.o
-
-alcyoneServer.i: alcyoneServer.cpp.i
-.PHONY : alcyoneServer.i
-
-# target to preprocess a source file
-alcyoneServer.cpp.i:
-	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/alcyoneServer.cpp.i
-.PHONY : alcyoneServer.cpp.i
-
-alcyoneServer.s: alcyoneServer.cpp.s
-.PHONY : alcyoneServer.s
-
-# target to generate assembly for a file
-alcyoneServer.cpp.s:
-	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/alcyoneServer.cpp.s
-.PHONY : alcyoneServer.cpp.s
-
 debounce.o: debounce.cpp.o
 .PHONY : debounce.o
 
@@ -306,6 +282,30 @@ serialdevice.cpp.s:
 	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/serialdevice.cpp.s
 .PHONY : serialdevice.cpp.s
 
+webservice.o: webservice.cpp.o
+.PHONY : webservice.o
+
+# target to build an object file
+webservice.cpp.o:
+	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/webservice.cpp.o
+.PHONY : webservice.cpp.o
+
+webservice.i: webservice.cpp.i
+.PHONY : webservice.i
+
+# target to preprocess a source file
+webservice.cpp.i:
+	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/webservice.cpp.i
+.PHONY : webservice.cpp.i
+
+webservice.s: webservice.cpp.s
+.PHONY : webservice.s
+
+# target to generate assembly for a file
+webservice.cpp.s:
+	$(MAKE) -f CMakeFiles/alcyone.dir/build.make CMakeFiles/alcyone.dir/webservice.cpp.s
+.PHONY : webservice.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -318,9 +318,6 @@ help:
 	@echo "... alcyone.o"
 	@echo "... alcyone.i"
 	@echo "... alcyone.s"
-	@echo "... alcyoneServer.o"
-	@echo "... alcyoneServer.i"
-	@echo "... alcyoneServer.s"
 	@echo "... debounce.o"
 	@echo "... debounce.i"
 	@echo "... debounce.s"
@@ -339,6 +336,9 @@ help:
 	@echo "... serialdevice.o"
 	@echo "... serialdevice.i"
 	@echo "... serialdevice.s"
+	@echo "... webservice.o"
+	@echo "... webservice.i"
+	@echo "... webservice.s"
 .PHONY : help
 
 

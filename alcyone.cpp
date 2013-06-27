@@ -26,7 +26,7 @@
 
 #include "config.h"
 #include "mcp23008.h"
-#include "alcyoneServer.h"
+#include "webservice.h"
 #include "debounce.h"
 #include "wiringPi.h"
 #include "midi.h"

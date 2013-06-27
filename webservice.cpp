@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include "midi.h"
 #include "web++.hpp"
-#include "alcyoneServer.h"
+#include "webservice.h"
 #include "log.h"
 
 extern bool verbose;
