@@ -48,7 +48,6 @@ private:
     int address;
     int fd;
     int lastRead;
-    std::recursive_mutex mutex;
 protected:
     void initialize();
     void writeRegister(MCP_REGISTER register, int bit, int state);
