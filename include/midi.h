@@ -70,14 +70,14 @@ public:
         int _defaultChannel=0,
         int _defaultVelocity=127):
         SerialDevice(_device, _baudRate),
-        defaultOctave(_defaultOctave),
         octave(_defaultOctave),
-        defaultTransposition(_defaultTransposition),
-        transposition(_defaultTransposition),
-        defaultChannel(_defaultChannel)
+        transposition(_defaultTransposition),        
         channel(_defaultChannel),
-        defaultVelocity(_defaultVelocity)
-        velocity(_defaultVelocity) {}
+        velocity(_defaultVelocity),
+        defaultOctave(_defaultOctave),
+        defaultTransposition(_defaultTransposition),
+        defaultChannel(_defaultChannel),
+        defaultVelocity(_defaultVelocity) {}
     /**
     Externally-exposed method to modify the current octave.
     */

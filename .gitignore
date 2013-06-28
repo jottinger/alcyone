@@ -27,6 +27,7 @@ alcyone
 CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
+Makefile
 
 # configuration file (built by CMake)
 config.h
