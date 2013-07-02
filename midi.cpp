@@ -28,14 +28,14 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
     int v=getVector(x);
 
     if(verbose) {
-        std::clog << std::endl << "old value " << *var << " min " << minVal << " max " << maxVal
+        std::cout << std::endl << "old value " << *var << " min " << minVal << " max " << maxVal
                   << " vector " << v;
 
     }
     *var+=v;
     *var=std::max(minVal, std::min(*var, maxVal));
     if(verbose) {
-        std::clog << " new value " << *var << std::endl;
+        std::cout << " new value " << *var << std::endl;
     }
 }
 
@@ -44,13 +44,12 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
  If you want the offset note, use MIDI::getNote(), whose 
  purpose it is to calculate this value.
  */
-void MIDI::noteOn(unsigned int _channel, unsigned int note) {
+void MIDI::noteOn(unsigned int _channel, unsigned int _note) {
     send(0x90 | _channel);
-    send(note);
+    send(_note);
     send(velocity & 127);
     if(verbose) {
-        std::clog << "Note on: note " << note
-                  << " octave " << getOctave()
+        std::cout << "Note on: note " << _note
                   << ", velocity " << (velocity & 127) << std::endl;
     }
 }
@@ -58,12 +57,12 @@ void MIDI::noteOn(unsigned int _channel, unsigned int note) {
 /**
  This sends the ACTUAL NOTE as a note-off. NOT calculated.
  */
-void MIDI::noteOff(unsigned int _channel, unsigned int note) {
+void MIDI::noteOff(unsigned int _channel, unsigned int _note) {
     send(0x80 | _channel);
-    send(note);
+    send(_note);
     send(0);
     if(verbose) {
-        std::clog << "Note off: note " << note+getOctave()*12+getTransposition()
+        std::cout << "Note off: note " << _note
                   << ", velocity " << (velocity & 127) << std::endl;
     }
 }

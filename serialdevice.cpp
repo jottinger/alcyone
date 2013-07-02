@@ -34,10 +34,13 @@ SerialDevice::SerialDevice(std::string _device, int _baudRate):fd(0),baudRate(_b
                   << strerror(errno) << std::endl;
         exit(-1);
     }
+    std::cout << "Serial file descriptor: " << fd << std::endl;
 }
 
 void SerialDevice::send(unsigned char value) {
+//    std::cout << "writing 0x" << std::hex << (int)value << std::dec << std::endl;
     serialPutchar(fd, value);
+    serialFlush(fd);
 }
 
 unsigned char SerialDevice::read() {

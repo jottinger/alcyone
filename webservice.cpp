@@ -80,7 +80,7 @@ void logHttpRequest(WPP::Request* req, WPP::Response* res)
 void handleRequest(WPP::Request* req, WPP::Response* res)
 {
     if(verbose==true) {
-        logHttpRequest(req, res);
+//        logHttpRequest(req, res);
     }
 
     const char *data=req->query.at("message").c_str();
