@@ -540,4 +540,42 @@ stack would also become more complex.
 
 == Summary
 
+The Alcyone was built as a device to fulfill two basic requirements.
+
+One was as a working MIDI controller, suitable for actual
+stage work.
+
+The other was as a development platform through which I
+ might be able to learn what potential issues I would face when
+designing other possibly more unique instruments.
+
+A secondary aspect of its design would be that I exposed the
+entire design throughout its lifecycle, such that others
+would be able to learn from what I did, or offer advice
+on implementation or design.
+
+This is The Open Source Way, and I have to say that at least
+two of these requirements have been fulfilled in fantastic fashion;
+not only has the Alcyone been used in actual recordings 
+and performances, but much of the design was influenced heavily 
+through community participation.
+
+The bug with the MIDI note-off events, for example, had a potential
+solution offered at the San Mateo Maker Faire 2013, by a young teen
+- his solution wasn't quite applicable (as he didn't know how
+the device was implemented) but the fact that he used the Alcyone
+as a launching point for thinking about how he *might* implement
+such a construct was impressive.
+
+I'd like to consider other implementation platforms, or possibly
+a USB soundcard, to allow onboard sound generation, as that's
+also an interest of mine; I'm very likely to implement a Bluetooth
+network transport, because other form factors may not provide the
+physical space required for an access point.
+
+So far, though, the Alcyone has been a resounding success, given
+its design goals. With that said, I'm more than happy to
+answer any questions about its design and implementation, 
+as well as maintain a list of potential enhancements.
+
 == References
