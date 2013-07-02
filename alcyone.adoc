@@ -169,4 +169,375 @@ another messaging protocol, one designed very much for device-to-device
 communications, particularly for short messages. Bluetooth devices
 can also be designed for very low power usage.
 
+The short explanation is that the original software stack used
+streams over TCP/IP, and it was the easiest (and shortest) implementation
+path.
+
+Configuring the wireless on the Raspberry Pi was fairly easy.
+In order for the Alcyone to serve as its own networking 
+infrastructure, the wireless had to be configured as an access
+point, which means it will have its own network SSID and security;
+the external client will have to use this access point in order to
+have control of the Alcyone.
+
+Not only does this avoid reliance on what might be
+inconsistent or nonexistent network services, it also limits
+the amount of traffic that competes for the client, and it
+also allows us to use a consistent IP for the Alcyone (as opposed
+to guessing what valid address the Alcyone happens to receive
+from the network infrastructure.)
+
+For this, I used two packages: +hostapd+ and +udhcpd+. The default
+build of +hostapd+ did not support my wireless network card, so I had
+to use one built for it; it's easily downloadable, but still slightly
+inconvenient.
+
+Setting up the network after installation of these packages was 
+trivial.
+
+=== Software
+
+The software for the Alcyone comes in two artifacts: the actual 
+embedded code (the code running on the Raspberry Pi) and an external
+client app (currently targeted towards Android).
+
+==== Embedded Software
+
+The embedded platform is running a single application, called "alcyone"
+of all things, written in C++. C++ was chosen because the original
+test program was written on an Arduino Uno, which tends to encourage
+the use of Arduino "sketches," which are themselves a form of C++ code
+(mostly with really odd library support)
+
+Interaction with the physical hardware is provided by Gordon Prescott's
+wiringPi library, an excellent implementation with various language
+implementations.
+
+It uses three threads, provided via +boost::thread+, to execute. All three
+threads are infinite loops; the Alcyone is basically a set of 
+state machines, with the different machines able to affect the others.
+
+The simplest thread is a "flare" machine; it basically loops through
+the output LEDs. The loop provides a timer value via an +extern+ variable.
+
+NOTE: The C++ code could definitely be written more 
+effectively, in a lot of
+ways. First off, there's little guarding of multithreaded access. 
+For another, OOP is used perhaps less than it could be; the flare
+process could have exposed a method to affect the delay time instead
+of using an external variable, for example. There's no claim here
+that this code is optimal in any way, shape, or form: the goal is
+operation, not impressing others. That said, I'm certainly trying
+to improve it all the time.
+
+The second thread polls the digital inputs for changes in pedal state
+- in other words, when the pedals are pressed down and lifted up.
+The routine keeps track of two states: the "current state" based on
+a digital read, and the "previously read" state.
+
+The current state is buffered to handle "bounce."
+
+Bounce is the natural tendency of an electrical current to fluctuate
+during changes. When a circuit is closed (or opened), electrons flow
+across it _occasionaly_ until the circuit settles in; the circuit
+appears to "bounce" open and closed for a very short while. This makes
+consistent reads very difficult, unless you "debounce" the circuit.
+
+There are two ways to debounce circuits; one way uses hardware, using 
+something called a "Schmitt trigger buffer." Jack Ganssle has an excellent
+http://www.eng.utah.edu/~cs5780/debouncing.pdf[guide to debouncing] 
+that describes a few different ways to handle bounce in hardware and software
+(including code). 
+
+I used a custom approach (although Mr. Ganssle's code is very similar).
+I wrote a class that examines the input and counts the "open" and "closed"
+states. It's possible that the debouncing mechanism could be fooled 
+if the user plays quickly enough (pressing and releasing pedals much faster
+than the human eye can blink) but the sample frequency is such that
+bouncing signals haven't actually caused an incorrect result yet.
+
+The process is fairly simple: on every loop, I read the digital state
+of the pedals, and feed that into the debouncing mechanism, yielding
+a result (biased towards the actual state).
+
+If the current state is different than the "previously read" state, then
+we have a change; if the "current state" is "down," then the 
+pedal was just pressed, and we need to send a "note on" event;
+otherwise, a "note off" event should be sent.
+
+Which note is sent is based on an offset. The MIDI mechanism 
+contains a reference to a "current octave" and a "current transposition"
+setting; the actual note used is determined by multiplying the
+octave by 12, then adding the transposition value.
+
+Therefore, if the current octave is 3, and the transposition setting is
+1 (meaning that the farthest left pedal is now C# and not C, an offset
+of one half-step), and the third pedal is depressed, the actual note is
+calculated through the use of the pedal, plus the octave offset, plus the
+transposition. The pedals start at zero, so the pedal number is *two*:
+
+   2 + 3*12 + 1 = 39
+
+This actually yielded a bug in the initial demonstration of the Alcyone.
+If the transposition settings were changed while a note was being played,
+the "note off" event would be for the wrong note! The reason should
+be fairly apparent.
+
+Assume the "note on" event is for note 39 (as in the calculation above).
+Now let us set the transposition to 0 (i.e., reset it). Now, when the pedal
+is released, the "note off" value is calculated... at 38, instead of 39.
+
+The "note off" event thus doesn't correspond to the "note on" event, 
+and therefore a receiver doesn't actually get the correct signal
+to release the note.
+
+This is corrected by the use of another data element, the "last note sent
+by this pedal." Thus, note off events take the note value from this
+dataset, rather than recalculating the note value when the pedal is 
+released.
+
+Thus, the pedal press/release cycle follows this process:
+
+. Physically depress pedal (poor, sad pedal)
+. Calculate MIDI note by offset of pedal + 12*octave + transposition
+. Store MIDI note in an internal array, index based on the offset of the pedal
+. Send MIDI on
+. Physically release the pedal
+. Send MIDI off based on the note in the internal array
+
+MIDI actually required a number of changes to the Linux configuration
+for the Raspberry Pi.
+
+The Pi's serial driver does not actually support 31250 baud, 
+the baud rate required by the MIDI specification. Therefore, I
+had to overclock the serial chip, by modifying +/boot/config.txt+:
+
+----
+init_uart_clock=2441406
+init_uart_baud=38400
+----
+
+Next, I needed to disable the serial console, which uses the RX/TX
+pins that I needed for MIDI, through modification of 
++/boot/cmdline.txt+:
+
+----
+dwc_otg.lpm_enable=0 console=tty1 console=tty1 root=/dev/mmcblk0p2 /
+rootfstype=ext4 elevator=deadline rootwait bcm2708.uart_clock=3000000
+----
+
+Lastly, I needed to disable the TTY that would normally get assigned
+to the RX/TX pins, as well, by modifying +/etc/inittab+:
+
+----
+#Spawn a getty on Raspberry Pi serial line
+#T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100
+----
+
+The last thread is a simple web server, based on web++.hpp. This is an
+#include file (thus the ".hpp") that provides HTTP services; the Alcyone
+application provides one web service endpoint (mapped to the root
+url, so "/"), which looks for an HTTP parameter, "message."
+
+This parameter is a number, which corresponds to a simple wire protocol
+for the Alcyone's services. The number is an encoded byte,
+based on the following table:
+
+
+[cols="<1,<1,<4", options="header"]
+|===
+|Message|Payload|Notes
+
+|+MSG_MIDI_RESET+|_0001 xxxx_|
+|+MSG_MIDI_CHANNEL_CHANGE+|_0010 vvvv_|
+|+MSG_MIDI_OCTAVE_CHANGE+|_0100 vvvv_|
+|+MSG_MIDI_TRANSPOSITION_CHANGE+|_1000 vvvv_|
+|+MSG_RESET+|_1111 xxxx_|
+|+MSG_REQUEST_STATUS+|_0011 xxxx_|Responds with three bytes: octave, transposition, channel|
+|===
+
+In this table, _xxxx_ is an "ignored value," _vvvv_ is "down if zero".
+
+The server is a simple loop; it processes a request, has an internal
++switch/case+ that examines the upper nybble of the "message" value
+and applies changes as required.
+
+No matter what the requested operation is, the Alcyone responds with
+three integers in plain text, which correspond to the current octave, 
+the current transposition setting, and the current MIDI channel.
+
+==== External Client Software
+
+The external Alcyone client is written as an Android application.
+
+It's really pretty straightforward; it provides three sets of 
+two buttons and one text field, which control the current octave, the
+current transposition setting, and the current MIDI channel. 
+
+A menu offers access to two more features (MIDI and device resets) as
+well as a configuration activity, which allows control of the Alcyone's
+IP.
+
+Every time one of the buttons is pressed (or one of the resets is used)
+an HTTP request with the command is sent to the Alcyone; the response
+will always contain the current device status, so the data is refreshed
+and redisplayed.
+
+=== Ergonomics
+
+An implemented schematic and working software (both embedded and external)
+are all well and good, but they all ignore the actual aspect of _playing_
+the Alcyone.
+
+The Alcyone is designed to be played by standing guitarists (because I tend
+to stand when I play guitar, of course.) It is not likely to be played
+with delicacy.
+
+In order to be useful, it needs to be mounted in a case that offers the
+following qualities:
+
+. Must be heavy enough to allow stability for the pedals. It would be
+unfortunate for the musician if the pedals moved during performance
+(as many stage configurations are laid out for the convenience of 
+the performer, and often monitors are aimed in specific ways). It
+would be even less fortunate for an audience member if the Alcyone
+were to somehow be launched at him or her.
+. Must be tough enough to handle being stepped on thousands of times,
+by a full-grown adult.
+. Must have the pedals low enough so that the musician's ankle is 
+comfortable while playing the instrument.
+
+In the end, the Alcyone received a wooden case built from 2x4 wood and
+shellacked fencing; this gives it a rustic look (which has its own
+appeal, for various reasons) and is tough enough to handle rough
+treatment. With proper reinforcement, the Alcyone is strong enough
+for an adult to stand on, although I definitely wouldn't recommend
+jumping on it.
+
+== Improvements
+
+As a working testing environment (a functional ongoing experiment,
+if you like), the Alcyone has a number of areas in which it can
+gain new features. Some features are appropriate for the 
+actual physical form factor; others are generic to MIDI controllers
+and thus would be appropriate to devices that use the Alcyone's
+basic electronic architecture.
+
+=== Onboard Sound
+
+The first enhancement, and by far the one asked about most, is 
+the potential for onboard sound generation.
+
+The Raspberry Pi has a 1/8" audio output, and many examples of the
+Pi playing prerecorded samples exist; it's certainly within the
+realm of possibility, despite not being in the original requirements
+for the Alcyone.
+
+However, the Pi's audio jack is limited in quality due to cost; 
+it supports 11-bit
+audio, which is better than the Commodore 64's audio, but not by much.
+(It might be nice to have better audio, but the Pi is a mere $35 USD.
+Better hardware is easily possible, but not at that price point.)
+
+First, let's look at what "11-bit audio" means. 
+
+Digital sound is rendered as points on a wave. To generate a sine
+wave (a muted, typically pleasant audio wave), one generates a large
+number of values (based on the sample rate) using the sine function,
+and sends that to an audio receiver.
+
+The bits referred to in audio generation refer to the precision of
+this wave. An 8-bit generator provides 256 possible positions for the
+wave; 11 bits gives you 2048 possible positions, which is quite a bit
+more precise, but still is far from CD audio quality - which is
+16 bits, therefore providing a source of up to 65536 positions on 
+the wave.
+
+Professional musicians tend to consider 16-bit audio to be "tolerable,"
+with the industry standard for recording being 24-bits and with many
+recording environments supporting 32-bit audio.
+
+With the lack of precision in the wave, any audio generated by the
+Pi would be lacking in quality to begin with, not to mention the
+CPU drain and software configuration that would be necessary in order
+to provide modifications to the sound like filters, amplitude, and
+other such properties of sound.
+
+While still desirable at some point, until the Pi supports both better
+audio and a faster CPU, onboard sound generation remains out of
+scope.
+
+With that said, future designs should probably consider addressing this,
+assuming their onboard audio is of higher quality.
+
+=== Pressure Sensitivity
+
+The Alcyone's original conception was that of bass pedals. Typically,
+bass notes don't use a _lot_ of dynamic range, and as the device
+is played with feet, dynamics aren't likely to matter anyway. 
+(Usually you're stepping on the darned thing with most of 
+your weight.)
+
+With that said, though, it might be nice to offer pressure
+sensitivity; the MIDI specification certainly allows velocity
+(and aftertouch, as well, which is when you alter the 
+pressure on a depressed key after it's started playing a note.)
+
+Pressure sensitivity would also open up the possibility of dynamic 
+percussion.
+
+The digital nature of the GPIO on the Pi (and the MCP23008, which the
+Alcyone uses to read the pedal state) does _not_ offer dynamic control;
+pedals are down or up, with nothing in between.
+
+There are certainly ways to address pressure and velocity, using
+ADC converters with pressure pads or variable resistance mechanisms
+(i.e., capacitance, or resistor tape). 
+
+It's possible that reading the converted data (from the analog input
+to digital form) is too slow for a full keyboard - I haven't
+tested. It's something to think about.
+
+=== Platform-neutral external client
+
+The external client right now runs on Android, largely because
+that's the type of device I have. However, many musicians
+use Apple devices (the iPhone and iPad).
+
+If I were to write the external client in HTML and Javascript,
+all *any* external device would need is network access and
+a compliant browser.
+
+Given the protocol in use, this should be trivial to create; 
+the larger concern is how the Pi hosts the application.
+
+Probably any web server would do, because loads would be
+_very_ infrequent.
+
+With that said, however, the possibility of Bluetooth as a
+network transport works against this idea.
+
+=== Bluetooth instead of wireless TCP/IP
+
+TCP/IP is trivial. However, the TCP/IP dongles available
+_typically_ consume more power than the Raspberry Pi can
+reliably deliver. (There are some that are rated low-power
+enough that the Pi can indeed use them, provided other power
+drains aren't too high.)
+
+Currently, this is managed through the use of a powered
+USB hub mounted in the Alcyone's case, even though that
+adds an extra power supply.
+
+Another alternative is the use of Bluetooth, which has broadcasting
+dongles that are, indeed, low-power enough for the Pi
+to use. Bluetooth is also high-bandwidth enough that
+it would serve appropriately for an external client.
+
+This is probably preferable to TCP/IP; I just haven't purchased
+a Bluetooth dongle with which to test, and the software
+stack would also become more complex.
+
+== Summary
+
 == References
