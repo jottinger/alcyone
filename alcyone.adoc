@@ -15,9 +15,9 @@ where appropriate, with the understanding that some choices were made
 "just because," out of ignorance, necessity, or mere personal preference.
 
 Notes taken during the development of the Alcyone can be found on
-my blog using "http://www.enigmastation.com/?s=midi[midi]" as a search term,
+my blog using http://www.enigmastation.com/?s=midi[midi] as a search term,
 and most recent entries are under the 
-"http://www.enigmastation.com/posts/category/alcyone-music/[Alcyone]" tag.
+http://www.enigmastation.com/posts/category/alcyone-music/[Alcyone] tag.
 
 Source code for the project (including this document and a 
 Fritzing schematic) can be found on 
