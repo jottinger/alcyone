@@ -6,7 +6,7 @@ Joseph B. Ottinger <joeo@enigmastation.com>
 == Purpose
 
 The Alcyone is a home-built MIDI controller, using the Raspberry Pi as 
-a central controlling component. 
+a central controlling component.
 
 The Alcyone is an ongoing design, so this document
 will address not only existing components, but will also address potential
@@ -14,14 +14,36 @@ future enhancements. Rationales for architectural choices will be offered
 where appropriate, with the understanding that some choices were made 
 "just because," out of ignorance, necessity, or mere personal preference.
 
+Notes taken during the development of the Alcyone can be found on
+my blog using "http://www.enigmastation.com/?s=midi[midi]" as a search term,
+and most recent entries are under the 
+"http://www.enigmastation.com/posts/category/alcyone-music/[Alcyone]" tag.
+
+Source code for the project (including this document and a 
+Fritzing schematic) can be found on 
+https://github.com/jottinger/alcyone[GitHub]. The progenitor project
+of the Alcyone, based on the 
+http://arduino.cc/en/Main/ArduinoBoardUno[Arduino Uno], 
+is also available on GitHub
+under the repository name of 
+https://github.com/jottinger/frankenpedal[Frankenpedal] -
+this code is not likely to be useful, but it might be interesting
+for historical purposes, and Arduino users may be able to use some
+of its features for other projects.
+
 === Rationale
 
 The Alcyone was designed with two primary purposes in mind.
 
-One purpose was almost purely selfish; I wanted a MIDI controller in
+One purpose was almost purely selfish; I wanted a 
+http://en.wikipedia.org/wiki/MIDI_controller[MIDI controller] in
 the form of bass pedals. Building a foot pedal would be far less expensive
-than purchasing a Moog Taurus 3 (a full analog synthesizer in 
-a footpedal form factor) or even a Roland PK-6 (a simple footpedal controller,
+than purchasing a 
+http://www.moogmusic.com/products/taurus/taurus-3-bass-pedals[Moog Taurus 3] 
+(a full analog synthesizer in 
+a foot pedal form factor) or even a 
+http://www.rolandus.com/products/details/1196[Roland PK-6] (a simple 
+foot pedal controller,
 at roughly $900 USD).
 
 NOTE: The Moog Taurus 2 (not the Taurus 3) was the original inspiration
@@ -34,10 +56,22 @@ The other purpose was the actual linchpin for the design. I wanted to
 figure out what actually went into musical instrument design, such that
 I might be able to design other musical instruments. 
 
-I also wanted to be able to tell _others_ how the Alcyone was designed,
+As a secondary purpose, I also wanted to be able 
+to tell _others_ how the Alcyone was designed,
 such that _they_ might be able to not only build their own Alcyone, if
 that was what they desired, and they might also be able to build their
 _own_ designs (and share them with me, in kind.)
+
+Another secondary purpose was to look at how an open source mindset
+might be applied to a project of this nature, using open source processes
+and open source projects in the physical implementation and in
+the design.
+
+Platforms like http://fedoraproject.org[Fedora] provided an
+ecosystem in which this kind of approach is very much the norm,
+so there's little work involved in encouraging participation;
+users in these communities *expect* to participate, which is
+not only useful but very encouraging.
 
 === The Name
 
@@ -49,12 +83,15 @@ easier... as you'll see from this explanation.
 Taurus.
 
 The Taurus was originally designed as a part of a synthesizer ensemble 
-from Moog, called the "Constellation." The Taurus was the bass pedal of the
+from Moog, called the 
+http://www.brain-salad-surgery.de/moog_constellation.html[Constellation]. 
+The Taurus was the bass pedal of the
 ensemble; the other parts were the "Lyra" and the "Apollo." The Lyra was
 never built; the Apollo's design apparently found its way into the PolyMoog.
 
 The Taurus, however, became very popular, through its use in bands 
-like Rush, Genesis, and others.
+like Rush, Genesis, ELP (from whom the explanation of the Constellation
+comes) and others.
 
 "Alcyone" as a name followed this linear thought:
 
@@ -76,7 +113,10 @@ for me to pronounce, to boot.
 === Scope
 
 The Alcyone is "merely" a MIDI controller; it does not generate any
-sound in and of itself, although this would be a welcomed capability. The
+sound in and of itself, although this would be a welcomed capability. 
+
+The actual processing power is provided through a 
+http://raspberrypi.org[Raspberry Pi], and the
 Raspberry Pi's audio output is only 11 bits, which is better than, say, 
 a Nintendo DS or some ancient digital synthesizers, but is far inferior
 to CD quality, and is nowhere near what I would like for actual
@@ -86,7 +126,7 @@ audio creation.
 
 === MIDI
 
-MIDI stands for "Musical Instrument Digital Interface," and is an 
+http://www.midi.org[MIDI] stands for "Musical Instrument Digital Interface," and is an 
 industry-standard protocol for electronic instruments. It is based on 
 three types of events (note events, control events, and global events)
 and uses a serial connection at 31250 baud.
@@ -98,11 +138,13 @@ and uses a serial connection at 31250 baud.
 The Alcyone uses a very simple internal electronic design. 
 
 The pedals themselves are a 13-note chord, salvaged from an old
-Lowrey organ, purchased over EBay. They rely on a rocker switch that
+http://www.lowrey.com/[Lowrey] organ, purchased over http://ebay.com[EBay]. 
+They rely on a rocker switch that
 pulls a spring across a circuit to close it.
 
 As best I can tell, in the Lowrey design the pedals convert the 
-circuit to a CV/Gate signal, which was a standard before MIDI was
+circuit to a http://en.wikipedia.org/wiki/CV/Gate[CV/Gate] 
+signal, which was a standard before MIDI was
 created. However, CV/Gate was never specified; different manufacturers
 use different implementations.
 
@@ -119,9 +161,13 @@ little of the existing mechanism as possible, which meant relying solely
 on the rocker switch, and wiring my own digital I/O.
 
 As the Pi only has a limited number of GPIO pins, I wired the circuits
-for the rocker switches to a set of I2C chips. These use a serial
-protocol to map GPIO pins; the MCP23008 offers eight individually-addressible 
-GPIO pins, and the MCP23017 offers sixteen.
+for the rocker switches to a set of 
+http://en.wikipedia.org/wiki/I%C2%B2C[I2C] chips. These use a serial
+protocol to map GPIO pins; the 
+http://www.adafruit.com/products/593[MCP23008] offers eight
+individually-addressible 
+GPIO pins, and the 
+http://www.adafruit.com/products/732[MCP23017] offers sixteen.
 
 The I2C chips can be wired such that seven of them are on a single serial
 connection; thus, if you use seven MCP23008 chips in a series, you have 56
@@ -137,9 +183,11 @@ The pedals are connected to power (+5v) and wired to the MCP23008s; the
 digital inputs are also connected to pull-down resistors to clear out
 digital noise.
 
-The Raspberry Pi is connected to the I2C series and also to a Din5 connector
-(the industry standard for MIDI connections). The Din5 is mounted on a Sparkfun
-MIDI breakout kit, mostly chosen for availability and ease of use.
+The Raspberry Pi is connected to the I2C series and also to a 
+http://en.wikipedia.org/wiki/DIN_connector[Din5 connector]
+(the industry standard for MIDI connections). The Din5 is mounted on a 
+https://www.sparkfun.com/products/9595[Sparkfun MIDI shield kit], 
+mostly chosen for availability and ease of use.
 
 A powered USB hub is also part of the hardware installation; the hub
 has one device installed, a wireless networking dongle. The powered hub
@@ -164,7 +212,8 @@ The simplest solution involves the Alcyone serving as its
 own wireless access point, then, meaning that it provides its own
 networking infrastructure.
 
-An alternative would be to avoid TCP/IP altogether. Bluetooth is 
+An alternative would be to avoid TCP/IP altogether. 
+http://en.wikipedia.org/wiki/Bluetooth[Bluetooth] is 
 another messaging protocol, one designed very much for device-to-device
 communications, particularly for short messages. Bluetooth devices
 can also be designed for very low power usage.
@@ -187,13 +236,18 @@ also allows us to use a consistent IP for the Alcyone (as opposed
 to guessing what valid address the Alcyone happens to receive
 from the network infrastructure.)
 
-For this, I used two packages: +hostapd+ and +udhcpd+. The default
+For this, I used two packages: 
++http://hostap.epitest.fi/hostapd/[hostapd]+ 
+and +http://www.busybox.net/[udhcpd]+ as referred to
+via http://elinux.org[eLinux.org]'s 
+http://elinux.org/RPI-Wireless-Hotspot[RPI-Wireless-Hotspot] page. The default
 build of +hostapd+ did not support my wireless network card, so I had
 to use one built for it; it's easily downloadable, but still slightly
 inconvenient.
 
 Setting up the network after installation of these packages was 
-trivial.
+trivial. Honestly, the documentation from eLinux.org is done
+well enough to follow literally.
 
 === Software
 
@@ -204,25 +258,36 @@ client app (currently targeted towards Android).
 ==== Embedded Software
 
 The embedded platform is running a single application, called "alcyone"
-of all things, written in C++. C++ was chosen because the original
+of all things, written in http://cplusplus.com[$$C++$$]. $$C++$$
+was chosen because the original
 test program was written on an Arduino Uno, which tends to encourage
-the use of Arduino "sketches," which are themselves a form of C++ code
-(mostly with really odd library support)
+the use of Arduino "sketches," which are themselves a form of $$C++$$ code
+(mostly with really odd library support).
 
-Interaction with the physical hardware is provided by Gordon Prescott's
-wiringPi library, an excellent implementation with various language
+C++ editing was largely done through 
+http://www.codeblocks.org/[Code::Blocks], easily installed for 
+http://fedoraproject.org[Fedora]
+through +yum+, as the +codeblocks+ artifact.
+
+Interaction with the physical hardware is provided by 
+http://drogon.net/[Gordon Prescott]'s
+http://wiringpi.com/[wiringPi] library, an excellent
+utility with various language
 implementations.
 
-It uses three threads, provided via +boost::thread+, to execute. All three
+It uses three threads, provided via 
++http://www.boost.org/doc/libs/1_54_0/doc/html/thread.html[boost::thread]+, to execute. All three
 threads are infinite loops; the Alcyone is basically a set of 
-state machines, with the different machines able to affect the others.
+https://en.wikipedia.org/wiki/Finite-state_machine[state machines], 
+with the different machines able to affect the others.
 
 The simplest thread is a "flare" machine; it basically loops through
 the output LEDs. The loop provides a timer value via an +extern+ variable.
 
 NOTE: The C++ code could definitely be written more 
 effectively, in a lot of
-ways. First off, there's little guarding of multithreaded access. 
+ways. First off, there's little 
+http://en.cppreference.com/w/cpp/thread/mutex[guarding of multithreaded access]. 
 For another, OOP is used perhaps less than it could be; the flare
 process could have exposed a method to affect the delay time instead
 of using an external variable, for example. There's no claim here
@@ -235,16 +300,18 @@ The second thread polls the digital inputs for changes in pedal state
 The routine keeps track of two states: the "current state" based on
 a digital read, and the "previously read" state.
 
-The current state is buffered to handle "bounce."
+The current state is buffered to handle 
+http://www.elexp.com/t_bounc.htm[bounce].
 
 Bounce is the natural tendency of an electrical current to fluctuate
 during changes. When a circuit is closed (or opened), electrons flow
-across it _occasionaly_ until the circuit settles in; the circuit
+across it _occasionally_ until the circuit settles in; the circuit
 appears to "bounce" open and closed for a very short while. This makes
 consistent reads very difficult, unless you "debounce" the circuit.
 
 There are two ways to debounce circuits; one way uses hardware, using 
-something called a "Schmitt trigger buffer." Jack Ganssle has an excellent
+something called a "Schmitt trigger buffer." 
+http://www.ganssle.com/[Jack Ganssle] has an excellent
 http://www.eng.utah.edu/~cs5780/debouncing.pdf[guide to debouncing] 
 that describes a few different ways to handle bounce in hardware and software
 (including code). 
@@ -310,7 +377,9 @@ for the Raspberry Pi.
 
 The Pi's serial driver does not actually support 31250 baud, 
 the baud rate required by the MIDI specification. Therefore, I
-had to overclock the serial chip, by modifying +/boot/config.txt+:
+had to 
+http://www.enigmastation.com/posts/alcyone-beta-midi-end-to-end-with-the-raspberry-pi/[overclock 
+the serial chip], by modifying +/boot/config.txt+:
 
 ----
 init_uart_clock=2441406
@@ -334,7 +403,8 @@ to the RX/TX pins, as well, by modifying +/etc/inittab+:
 #T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100
 ----
 
-The last thread is a simple web server, based on web++.hpp. This is an
+The last thread is a simple web server, based on 
+http://konteck.github.io/wpp/[$$web++.hpp$$]. This is an
 #include file (thus the ".hpp") that provides HTTP services; the Alcyone
 application provides one web service endpoint (mapped to the root
 url, so "/"), which looks for an HTTP parameter, "message."
@@ -368,7 +438,8 @@ the current transposition setting, and the current MIDI channel.
 
 ==== External Client Software
 
-The external Alcyone client is written as an Android application.
+The external Alcyone client is written as an 
+http://www.android.com[Android] application.
 
 It's really pretty straightforward; it provides three sets of 
 two buttons and one text field, which control the current octave, the
@@ -407,7 +478,19 @@ by a full-grown adult.
 . Must have the pedals low enough so that the musician's ankle is 
 comfortable while playing the instrument.
 
-In the end, the Alcyone received a wooden case built from 2x4 wood and
+Two of the pedals actually broke in shipping, which I wouldn't blame
+on the seller; the parts were packed about as well as they could have
+been (with perhaps the exception of blown foam, but... really.)
+
+I ended up taking wood for a picket fence and cutting it down to 
+size to match the existing pedals (roughly six inches long) and
+replacing all of the "white keys" with the wooden keys. These
+are more likely to be immediately durable than the original
+organ pedals (which would be decades old), although there's probably
+still room for improvement.
+
+As for the actual external container, the Alcyone received a
+wooden case built from 2x4 wood and
 shellacked fencing; this gives it a rustic look (which has its own
 appeal, for various reasons) and is tough enough to handle rough
 treatment. With proper reinforcement, the Alcyone is strong enough
@@ -502,7 +585,9 @@ tested. It's something to think about.
 
 The external client right now runs on Android, largely because
 that's the type of device I have. However, many musicians
-use Apple devices (the iPhone and iPad).
+use Apple devices (the 
+http://www.apple.com/iphone/[iPhone] and 
+http://www.apple.com/ipad/[iPad]).
 
 If I were to write the external client in HTML and Javascript,
 all *any* external device would need is network access and
@@ -561,7 +646,9 @@ and performances, but much of the design was influenced heavily
 through community participation.
 
 The bug with the MIDI note-off events, for example, had a potential
-solution offered at the San Mateo Maker Faire 2013, by a young teen
+solution offered at the 
+http://makerfaire.com/bayarea-2013/[San Mateo Maker Faire 2013],
+by a young teen
 - his solution wasn't quite applicable (as he didn't know how
 the device was implemented) but the fact that he used the Alcyone
 as a launching point for thinking about how he *might* implement
@@ -577,5 +664,3 @@ So far, though, the Alcyone has been a resounding success, given
 its design goals. With that said, I'm more than happy to
 answer any questions about its design and implementation, 
 as well as maintain a list of potential enhancements.
-
-== References
