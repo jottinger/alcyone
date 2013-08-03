@@ -109,7 +109,8 @@ void loop() {
         counter++;
         if(counter%1276==0) {
             flareTime++;
-            std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
+            // JBO Too noisy!
+            // std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
         }
         for(int pin=0; pin<13; pin++) {
             int datum=data[pin/8];
@@ -119,7 +120,8 @@ void loop() {
             }
             if(state!=previousState[pin]) {
                 flareTime-=2;
-                std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
+                // JBO Too Noisy!
+                // std::clog << kLogNotice << "new flare time: " << flareTime << std::endl;
                 if(previousState[pin]) { // new state: OFF
                     midi.noteOff(12-pin); // when wired, pin 0 is the HIGH C
                 } else {
