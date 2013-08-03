@@ -4,6 +4,8 @@
 #include <iostream>
 #include <iomanip>
 
+#define VERBOSE(x) {if(verbose) {x};}
+
 enum LogPriority {
     kLogEmerg   = LOG_EMERG,   // system is unusable
     kLogAlert   = LOG_ALERT,   // action must be taken immediately
