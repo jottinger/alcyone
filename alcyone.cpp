@@ -132,7 +132,7 @@ void loop() {
                     midi.noteOff(previousChannel[offset], previousNote[offset]); // when wired, pin 0 is the HIGH C
                 } else {
                     unsigned int note=midi.getNote(offset);
-                    midi.noteOn(midi.getChannel(), offset);
+                    midi.noteOn(midi.getChannel(), note);
                     previousNote[offset]=note;
                     previousChannel[offset]=midi.getChannel();
                 }

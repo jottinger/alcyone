@@ -39,9 +39,14 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
     }
 }
 
+/**
+ *This sends the ACTUAL NOTE as a note-on. NOT calculated.
+ * If you want the offset note, use MIDI::getNote(), whose 
+ * purpose it is to calculate this value.
+ */
 void MIDI::noteOn(unsigned int _channel, unsigned int note) {
     send(0x90+_channel-1);
-    send(getNote(note));
+    send(note);
     send(velocity & 127);
     if(verbose) {
         std::clog << "Note on: note " << note

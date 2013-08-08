@@ -42,15 +42,18 @@ void MCP23008::initialize() {
 }
 
 void MCP23008::modeAll(MODE mode) {
+    std::lock_guard<std::recursive_mutex> guard(mutex);
     int val=(mode!=MODE_INPUT)?0:0xff;
     wiringPiI2CWriteReg8(fd, MCP_IODIR, val);
 }
 
 int MCP23008::read() {
+    std::lock_guard<std::recursive_mutex> guard(mutex);
     return (lastRead=wiringPiI2CReadReg8(fd, MCP_GPIO));
 }
 
 void MCP23008::writeRegister(MCP_REGISTER _register, int bit, int state) {
+    std::lock_guard<std::recursive_mutex> guard(mutex);
     if(bit>7) {
         return;
     }
@@ -65,14 +68,17 @@ void MCP23008::writeRegister(MCP_REGISTER _register, int bit, int state) {
 }
 
 void MCP23008::writePin(int bit, int state) {
+    std::lock_guard<std::recursive_mutex> guard(mutex);
     writeRegister(MCP_GPIO, bit, state);
 }
 
 void MCP23008::pinMode(int pin, MODE mode) {
+    std::lock_guard<std::recursive_mutex> guard(mutex);
     writeRegister(MCP_IODIR, pin, mode);
 }
 
 int MCP23008::readPin(int pin) {
+    std::lock_guard<std::recursive_mutex> guard(mutex);
     if(pin>7) {
         return 0;
     }

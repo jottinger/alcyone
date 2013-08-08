@@ -20,6 +20,8 @@
 #ifndef __MCP23008_H__
 #define __MCP23008_H__ 1
 
+#include <mutex>
+
 enum MODE {
     MODE_INPUT=0,
     MODE_OUTPUT=1
@@ -48,6 +50,7 @@ private:
     int address;
     int fd;
     int lastRead;
+    std::recursive_mutex mutex;
 protected:
     void initialize();
     void writeRegister(MCP_REGISTER register, int bit, int state);
