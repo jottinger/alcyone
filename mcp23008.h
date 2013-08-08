@@ -20,8 +20,6 @@
 #ifndef __MCP23008_H__
 #define __MCP23008_H__ 1
 
-#include <mutex>
-
 enum MODE {
     MODE_INPUT=0,
     MODE_OUTPUT=1
