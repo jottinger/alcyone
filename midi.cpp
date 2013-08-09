@@ -40,12 +40,12 @@ void MIDI::change(int* var, int minVal, int maxVal, unsigned char x)
 }
 
 /**
- *This sends the ACTUAL NOTE as a note-on. NOT calculated.
- * If you want the offset note, use MIDI::getNote(), whose 
- * purpose it is to calculate this value.
+ This sends the ACTUAL NOTE as a note-on. NOT calculated.
+ If you want the offset note, use MIDI::getNote(), whose 
+ purpose it is to calculate this value.
  */
 void MIDI::noteOn(unsigned int _channel, unsigned int note) {
-    send(0x90+_channel-1);
+    send(0x90 | _channel);
     send(note);
     send(velocity & 127);
     if(verbose) {
@@ -56,10 +56,10 @@ void MIDI::noteOn(unsigned int _channel, unsigned int note) {
 }
 
 /**
- *This sends the ACTUAL NOTE as a note-off. NOT calculated.
+ This sends the ACTUAL NOTE as a note-off. NOT calculated.
  */
 void MIDI::noteOff(unsigned int _channel, unsigned int note) {
-    send(0x80+_channel-1);
+    send(0x80 | _channel);
     send(note);
     send(0);
     if(verbose) {
@@ -68,16 +68,19 @@ void MIDI::noteOff(unsigned int _channel, unsigned int note) {
     }
 }
 
+/** 
+ Sends system resets: all controllers, all sounds off, all notes off
+*/
 void MIDI::reset() {
-    send(0xb0+channel-1); // system reset for channel
+    send(0xb0 | channel); // system reset for channel
     send(121); // reset all controllers
     send(0x00);
 
-    send(0xb0+channel-1); // system reset for channel
+    send(0xb0 | channel); // system reset for channel
     send(120); // sound off
     send(0x00);
 
-    send(0xb0+channel-1); // system reset for channel
+    send(0xb0 | channel); // system reset for channel
     send(123); // all notes off
     send(0x00);
 }

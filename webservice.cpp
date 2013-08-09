@@ -60,6 +60,23 @@ void logHttpRequest(WPP::Request* req, WPP::Response* res)
     }
 }
 
+/**
+ This method handles all external requests.
+
+ First, it checks the length of the message; we only handle a 
+ message that can be represented in a single byte presently,
+ so if it's too long, we know we can discard it out of hand.
+
+ If it's small enough, and it's a number, we pass the header
+ (the first nybble) through a switch case, dispatching the
+ argument as necessary.
+
+ Regardless of error condition, we return the status as a set
+ of three lines: octave, transposition, then channel. Channel is
+ incremented by one, because the internal values are 0-15 and 
+ the MIDI spec refers to channels 1-16 -- a lot like how days of
+ the month are handled, with an offset.
+ */
 void handleRequest(WPP::Request* req, WPP::Response* res)
 {
     if(verbose==true) {
@@ -135,7 +152,7 @@ void handleRequest(WPP::Request* req, WPP::Response* res)
 // respond with the current status, no matter what
     res->body << state->getOctave() << std::endl;
     res->body << state->getTransposition() << std::endl;
-    res->body << state->getChannel() << std::endl;
+    res->body << state->getChannel()+1 << std::endl;
 }
 
 void runServer(MIDI *midi)
