@@ -159,13 +159,13 @@ set (min_flare_time 100)
 set (max_flare_time 2000)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
-is_symbol_defined(symdef x86_64)
+
+is_symbol_defined(symdef __x86_64__)
+if(symdef) 
 	message(STATUS "Setting wiringPiStub")
 	add_subdirectory(wiringPiStub)
 	include_directories(${wiringPiStub_SOURCE_DIR})
-	link_directories(${wiringPiStub_BINARY_DIR})
-if(symdef) 
-	
+	link_directories(${wiringPiStub_BINARY_DIR})	
 endif()
 
 configure_file (
